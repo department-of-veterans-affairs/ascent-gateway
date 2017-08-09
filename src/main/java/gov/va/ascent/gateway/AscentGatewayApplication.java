@@ -15,7 +15,6 @@ import gov.va.ascent.gateway.filter.AscentGatewayAuditFilter;
 import gov.va.ascent.gateway.filter.AscentGatewayErrorFilter;
 import gov.va.ascent.gateway.filter.AscentGatewayPostFilter;
 import gov.va.ascent.gateway.filter.AscentGatewayPreFilter;
-import gov.va.ascent.security.config.EnableAscentSecurity;
 
 /**
  * An <tt>Ascent Gateway Server</tt> enabled for Spring Boot Application, 
@@ -26,7 +25,6 @@ import gov.va.ascent.security.config.EnableAscentSecurity;
 @EnableZuulProxy
 @EnableDiscoveryClient //enables spring-cloud-config client
 @EnableHystrix
-@EnableAscentSecurity
 public class AscentGatewayApplication {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AscentGatewayApplication.class);
