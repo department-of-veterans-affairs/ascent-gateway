@@ -14,7 +14,7 @@
 	<packaging>jar</packaging>
 
 	<name>${project.artifactId}</name>
-	<description>Project for Spring Boot Zuul Server</description>
+	<description>Ascent Project for Gateway Server</description>
 	
 	<!-- Docker properties to add min and max memory for spring boot jar start up -->
     <properties>
