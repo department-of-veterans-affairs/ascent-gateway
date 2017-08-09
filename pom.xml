@@ -62,8 +62,7 @@
 		<!-- ascent jwt authentication -->
 		<dependency>
 			<groupId>gov.va.ascent</groupId>
-			<artifactId>ascent-security</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<artifactId>ascent-platform-starter-security</artifactId>
 		</dependency>
 		
 		<!-- spring cloud sleuth and zipkin -->
