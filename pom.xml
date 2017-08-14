@@ -58,13 +58,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-        
-		<!-- ascent jwt authentication -->
+		 <!-- ascent jwt authentication configurations -->
 		<dependency>
 			<groupId>gov.va.ascent</groupId>
 			<artifactId>ascent-platform-starter-security</artifactId>
 		</dependency>
-		
+		<!-- ascent logging and audit configurations -->
+		<dependency>
+			<groupId>gov.va.ascent</groupId>
+			<artifactId>ascent-platform-starter-logger</artifactId>
+		</dependency>
 		<!-- spring cloud sleuth and zipkin -->
      	<dependency>
  			<groupId>org.springframework.cloud</groupId>
@@ -74,31 +77,26 @@
  			<groupId>org.springframework.cloud</groupId>
  			<artifactId>spring-cloud-sleuth-zipkin</artifactId>
  		</dependency>
- 		
         <!-- logstash logback encoder -->
 		<dependency>
 			<groupId>net.logstash.logback</groupId>
 			<artifactId>logstash-logback-encoder</artifactId>
 		</dependency>
-		
  		<!-- Netflix commons util -->
  		<dependency>
 			<groupId>com.netflix.netflix-commons</groupId>
 			<artifactId>netflix-commons-util</artifactId>
 		</dependency>
- 		
  		<!-- commons io -->
  		<dependency>
 		    <groupId>commons-io</groupId>
 		    <artifactId>commons-io</artifactId>
 		</dependency>
-
 		<!-- Apache Commons project dependencies -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
-		
 		<!-- google code gson  -->
 		<dependency>
 	        <groupId>com.google.code.gson</groupId>
