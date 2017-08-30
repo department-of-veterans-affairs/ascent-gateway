@@ -79,9 +79,7 @@ public class AscentGatewayPostFilter extends ZuulFilter {
 				LOGGER.debug("Response Header: {} -> {}", key, value);
 			});
 		}
-		MDC.remove("http.request");
-		MDC.remove("user");
-		MDC.remove("http.response");
+		MDC.clear();
 		return null;
 	}
 }
