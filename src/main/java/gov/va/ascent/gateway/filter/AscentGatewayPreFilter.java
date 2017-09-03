@@ -1,20 +1,16 @@
 package gov.va.ascent.gateway.filter;
 
-import java.security.Principal;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 
+import gov.va.ascent.framework.security.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
-
-import gov.va.ascent.security.jwt.PersonTraits;
 
 public class AscentGatewayPreFilter extends ZuulFilter {
 	
@@ -25,12 +21,9 @@ public class AscentGatewayPreFilter extends ZuulFilter {
 		RequestContext ctx = RequestContext.getCurrentContext();
 	    HttpServletRequest request = ctx.getRequest();
 		MDC.put("http.request", request.getRequestURI());
-		if(SecurityContextHolder.getContext().getAuthentication() != null) {
-			Principal principal = SecurityContextHolder.getContext().getAuthentication();
-			if (principal instanceof UsernamePasswordAuthenticationToken) {
-				PersonTraits auth = (PersonTraits)((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-				MDC.put("user", auth.getFirstName() + " " + auth.getLastName());
-			}
+		if(SecurityUtils.getPersonTraits() != null) {
+			MDC.put("user", SecurityUtils.getPersonTraits().getUser());
+			MDC.put("tokenId", SecurityUtils.getPersonTraits().getTokenId());
 		}
 		if (LOGGER.isDebugEnabled()) {
             ctx.setDebugRequest(true);
