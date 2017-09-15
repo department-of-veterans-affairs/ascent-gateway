@@ -86,6 +86,7 @@ public class AscentGatewayErrorController extends AbstractErrorController {
 		return ResponseEntity.status(status).body(getErrorAttributes(request, true));
 	}
 
+	@Override
 	public Map<String, Object> getErrorAttributes(HttpServletRequest request, boolean includeStackTrace) {
 		RequestAttributes requestAttributes = new ServletRequestAttributes(request);
 		return errorAttributes.getErrorAttributes(requestAttributes, includeStackTrace);

@@ -27,7 +27,7 @@ import com.google.gson.JsonSyntaxException;
 @Component
 public class AscentGatewayAuditHelper {
 	
-	private final static Logger LOGGER = LoggerFactory.getLogger(AscentGatewayAuditHelper.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AscentGatewayAuditHelper.class);
 	@Autowired Tracer tracer;
 
 	@Bean(name = "threadPoolTaskExecutor")
@@ -52,7 +52,8 @@ public class AscentGatewayAuditHelper {
 			}
 		}
 		catch(JsonSyntaxException jse){
-			LOGGER.warn("Not a valid Json String:"+jse.getMessage());
+			LOGGER.warn("Not a valid Json String: {}", jse.getMessage());
+			LOGGER.warn("Non valid Json String Exception: {}", jse);
 		}
 	}
 	
@@ -76,9 +77,9 @@ public class AscentGatewayAuditHelper {
 				}
 				if(elementValue.isJsonArray()) {
 					processJsonArray(elementValue.getAsJsonArray());
-				} // end if
-	        } // end for
-		} // end if (jsonObject != null)
+				}
+	        }
+		}
 	}
 	
 	private void processJsonArray(final JsonArray jsonArray) {
@@ -90,7 +91,7 @@ public class AscentGatewayAuditHelper {
 				processJsonElement(String.valueOf(index), jsonElement.next());
 				index++;
 			}
-		} // end if (jsonArray != null)
+		}
 	}
 	
 	private void processJsonElement(final String key, final JsonElement jsonElement) {
@@ -117,7 +118,7 @@ public class AscentGatewayAuditHelper {
 				}
 				if(elementValue.isJsonArray()) {
 					processJsonArray(elementValue.getAsJsonArray());
-				} // end if
+				}
 			}
 		}
 	}

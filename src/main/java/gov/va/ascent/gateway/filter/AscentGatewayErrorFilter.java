@@ -3,10 +3,9 @@ package gov.va.ascent.gateway.filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 
-public class AscentGatewayErrorFilter extends ZuulFilter {
+public class AscentGatewayErrorFilter extends AscentGatewayAbstractFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AscentGatewayErrorFilter.class);
     

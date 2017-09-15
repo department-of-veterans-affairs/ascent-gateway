@@ -9,12 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 
-public class AscentGatewayPreFilter extends ZuulFilter {
+public class AscentGatewayPreFilter extends AscentGatewayAbstractFilter {
 	
-	private final static Logger LOGGER = LoggerFactory.getLogger(AscentGatewayPreFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AscentGatewayPreFilter.class);
 
 	@Override
 	public Object run() {
@@ -29,7 +28,7 @@ public class AscentGatewayPreFilter extends ZuulFilter {
             ctx.setDebugRequest(true);
 		    Enumeration<String> headerNames = request.getHeaderNames();
 			while (headerNames.hasMoreElements()) {
-				String key = (String) headerNames.nextElement();
+				String key = headerNames.nextElement();
 				String value = request.getHeader(key);
 				LOGGER.debug("Request Header: {} -> {}", key, value);
 			}
