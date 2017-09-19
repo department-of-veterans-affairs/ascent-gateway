@@ -17,7 +17,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.http.HttpHeaders;
@@ -46,7 +45,6 @@ public class AscentGatewayAuditFilter extends AscentGatewayAbstractFilter {
             MediaType.APPLICATION_ATOM_XML_VALUE
     )));
 
-	@Autowired ErrorAttributes errorAttributes;
 	@Autowired Tracer tracer;
 	@Autowired AscentGatewayAuditHelper auditHelper;
 
