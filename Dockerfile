@@ -1,3 +1,4 @@
-FROM java:8
-ADD target/ascent-gateway-*.jar /ascent-gateway.jar
-ENTRYPOINT ["java", "-Xms64m", "-Xmx256m", "-jar", "/ascent-gateway.jar"]
+FROM jluck/ascent-base
+
+ENV JAR_FILE "/ascent-gateway.jar"
+ADD target/ascent-gateway-*.jar $JAR_FILE
