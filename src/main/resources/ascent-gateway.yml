@@ -12,17 +12,12 @@ zuul:
 #  Uncomment to disable services automatically registering in Zuul
 #  ignoredServices: '*'     
 endpoints:
-  restart:
-    enabled: true
-  shutdown:
-    enabled: true
   health:
     sensitive: false
-#  management security has been disabled. Need to revisit this once we figure out the 
-#  security features across the application and decided to secure the end points ourself 
-management:
-  security:
-    enabled: false
+security:
+  user:
+    name: ${ascent.security.username:admin}
+    password: ${ascent.security.password:default}
 #  logging level enabling for debug, info, trace, error
 logging: 
   level:
@@ -87,11 +82,11 @@ ascent:
       filter-process-url: /api/**
       enabled: false
       # any urls to be excluded by the filter
-      excludeUrls: "/api/**/v2/api-docs, /api/**/configuration/ui, /api/**/swagger-resources, /api/**/configuration/security, /api/**/swagger-ui.html, /api/**/webjars/**, /**/token, /api/**/beans, /api/**/beans, /api/**/autoconfig, /api/**/configprops, /api/**/dump, /api/**/env, /api/**/health, /api/**/info, /api/**/metrics, /api/**/mappings, /api/**/trace, /api/**/loggers"
+      excludeUrls: "/api/**/v2/api-docs, /api/**/configuration/ui, /api/**/swagger-resources, /api/**/configuration/security, /api/**/swagger-ui.html, /api/**/webjars/**, /**/token, /api/**/beans, /manage/**"
 # Sleuth configuration     
 # To skip specific patterns being exported, added few more customs on top of default skip pattern
 # see org.springframework.cloud.sleuth.instrument.web.TraceFilter.DEFAULT_SKIP_PATTERN
-spring.sleuth.web.skipPattern: (/api/.*/webjars.*|/api/.*/v2/api-docs.*|/api/.*/swagger-resources.*|/api/.*/swagger-ui.*|/api-docs.*|/autoconfig|/configprops|/dump|/health|/info|/metrics.*|/mappings|/trace|/swagger.*|.*\\.png|.*\\.css|.*\\.js|.*\\.html|/favicon.ico|/hystrix.stream)
+spring.sleuth.web.skipPattern: (/api/.*/webjars.*|/api/.*/v2/api-docs.*|/api/.*/swagger-resources.*|/api/.*/swagger-ui.*|/api-docs.*|/manage.*|/mappings|/trace|/swagger.*|.*\\.png|.*\\.css|.*\\.js|.*\\.html|/favicon.ico|/hystrix.stream)
 
 spring.sleuth.scheduled.skipPattern: "^org.*TestBeanWithScheduledMethodToBeIgnored$"
 # comma separated list of matchers

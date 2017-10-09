@@ -3,6 +3,7 @@
 	<!-- Resource is available in ascent-platform-starter-logger' library included via pom.xml dependency-->
     <include resource="gov/va/ascent/starter/logger/ascent-logback-starter.xml" />
     
+    <jmxConfigurator/>
     
     <root level="INFO">
     	<springProfile name="default,local-int">
