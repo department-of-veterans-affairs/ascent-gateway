@@ -82,7 +82,7 @@ ascent:
       filter-process-url: /api/**
       enabled: false
       # any urls to be excluded by the filter
-      excludeUrls: "/api/**/v2/api-docs, /api/**/configuration/ui, /api/**/swagger-resources, /api/**/configuration/security, /api/**/swagger-ui.html, /api/**/webjars/**, /**/token, /api/**/beans, /manage/**"
+      excludeUrls: "/api/**/v2/api-docs, /api/**/configuration/ui, /api/**/swagger-resources, /api/**/configuration/security, /api/**/swagger-ui.html, /api/**/webjars/**, /**/token, /api/**/beans, /api/**/beans, /api/**/autoconfig, /api/**/configprops, /api/**/dump, /api/**/env, /api/**/health, /api/**/info, /api/**/metrics, /api/**/mappings, /api/**/trace, /api/**/loggers"
 # Sleuth configuration     
 # To skip specific patterns being exported, added few more customs on top of default skip pattern
 # see org.springframework.cloud.sleuth.instrument.web.TraceFilter.DEFAULT_SKIP_PATTERN
