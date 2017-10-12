@@ -3,13 +3,14 @@
 	<!-- Resource is available in ascent-platform-starter-logger' library included via pom.xml dependency-->
     <include resource="gov/va/ascent/starter/logger/ascent-logback-starter.xml" />
     
+    <jmxConfigurator/>
     
     <root level="INFO">
     	<springProfile name="default,local-int">
 	        <appender-ref ref="CONSOLE" />
 	    </springProfile>
         <springProfile name="docker-demo,aws-ci,aws-dev,aws-stage,aws-prod">
-            <appender-ref ref="ASCENT_CONSOLE_LOG_ENCODER" />
+            <appender-ref ref="ASCENT_ASYNC_CONSOLE_APPENDER" />
         </springProfile>
     </root>
     
