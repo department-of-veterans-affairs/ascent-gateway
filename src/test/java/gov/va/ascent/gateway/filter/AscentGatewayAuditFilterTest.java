@@ -1,7 +1,7 @@
 package gov.va.ascent.gateway.filter;
 
 import com.netflix.zuul.context.RequestContext;
-import gov.va.ascent.gateway.audit.AscentGatewayAuditHelper;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,10 +38,7 @@ public class AscentGatewayAuditFilterTest {
 
     @MockBean
     Tracer tracer;
-
-    @MockBean
-    AscentGatewayAuditHelper auditHelper;
-
+    
     @Mock
     private DiscoveryClient discovery;
 
@@ -59,7 +56,6 @@ public class AscentGatewayAuditFilterTest {
                 this.properties);
         this.filter = new AscentGatewayAuditFilter();
         this.filter.tracer = tracer;
-        this.filter.auditHelper = auditHelper;
         RequestContext ctx = RequestContext.getCurrentContext();
         ctx.clear();
         ctx.setRequest(this.request);
@@ -86,12 +82,11 @@ public class AscentGatewayAuditFilterTest {
         ctx.setResponseDataStream(null);
         ctx.setResponseBody(null);
 
-        // supportsAuditType return true
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setMethod(HttpMethod.POST.name());
         ctx.addOriginResponseHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
-
-        //httpStatusSuccessful Method - return true
+ 
+        // supportsAuditType return false && httpStatusSuccessful return true
         MockHttpServletResponse response = new MockHttpServletResponse();
         response.setStatus(200);
 
@@ -103,7 +98,7 @@ public class AscentGatewayAuditFilterTest {
     }
 
     @Test
-    public void shouldFilterTrueContainsContentResponseBodyString() throws Exception {
+    public void shouldFilterFalseContainsContentResponseBodyString() throws Exception {
         // Setup
         RequestContext ctx = RequestContext.getCurrentContext();
 
@@ -111,12 +106,11 @@ public class AscentGatewayAuditFilterTest {
         ctx.setResponseDataStream(null);
         ctx.setResponseBody("String");
 
-        // supportsAuditType return true
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setMethod(HttpMethod.POST.name());
         ctx.addOriginResponseHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
 
-        //httpStatusSuccessful Method - return true
+        // supportsAuditType return false && httpStatusSuccessful return true
         MockHttpServletResponse response = new MockHttpServletResponse();
         response.setStatus(200);
 
@@ -124,11 +118,11 @@ public class AscentGatewayAuditFilterTest {
         ctx.setResponse(response);
 
 
-        assertEquals(true, this.filter.shouldFilter());
+        assertEquals(false, this.filter.shouldFilter());
     }
 
     @Test
-    public void shouldFilterTrueContainsContentResponseStreamData() throws Exception {
+    public void shouldFilterFalseContainsContentResponseStreamData() throws Exception {
         // Setup
         RequestContext ctx = RequestContext.getCurrentContext();
 
@@ -136,12 +130,12 @@ public class AscentGatewayAuditFilterTest {
         ctx.setResponseDataStream(new ByteArrayInputStream("String".getBytes()));
         ctx.setResponseBody(null);
 
-        // supportsAuditType return true
+       
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setMethod(HttpMethod.POST.name());
         ctx.addOriginResponseHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString());
 
-        //httpStatusSuccessful Method - return true
+        // supportsAuditType return false && httpStatusSuccessful return true
         MockHttpServletResponse response = new MockHttpServletResponse();
         response.setStatus(200);
 
@@ -149,11 +143,11 @@ public class AscentGatewayAuditFilterTest {
         ctx.setResponse(response);
 
 
-        assertEquals(true, this.filter.shouldFilter());
+        assertEquals(false, this.filter.shouldFilter());
     }
 
     @Test
-    public void shouldFilterTrueSupportsAuditTypeHeaderPairOne() throws Exception {
+    public void shouldFilterFalseSupportsAuditTypeHeaderPairOne() throws Exception {
         // Setup
         RequestContext ctx = RequestContext.getCurrentContext();
 
@@ -166,107 +160,7 @@ public class AscentGatewayAuditFilterTest {
         request.setMethod(HttpMethod.POST.name());
         ctx.addOriginResponseHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE.toString());
 
-        //httpStatusSuccessful Method - return true
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        response.setStatus(200);
-
-        ctx.setRequest(request);
-        ctx.setResponse(response);
-
-
-        assertEquals(true, this.filter.shouldFilter());
-    }
-
-    @Test
-    public void shouldFilterTrueSupportsAuditTypeHeaderPairTwo() throws Exception {
-        // Setup
-        RequestContext ctx = RequestContext.getCurrentContext();
-
-        // contentContains Method - return true
-        ctx.setResponseDataStream(new ByteArrayInputStream("String".getBytes()));
-        ctx.setResponseBody(null);
-
-        // supportsAuditType return true
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setMethod(HttpMethod.POST.name());
-        ctx.addOriginResponseHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_XML_VALUE.toString());
-
-        //httpStatusSuccessful Method - return true
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        response.setStatus(200);
-
-        ctx.setRequest(request);
-        ctx.setResponse(response);
-
-
-        assertEquals(true, this.filter.shouldFilter());
-    }
-
-    @Test
-    public void shouldFilterTrueSupportsAuditTypeHeaderPairThree() throws Exception {
-        // Setup
-        RequestContext ctx = RequestContext.getCurrentContext();
-
-        // contentContains Method - return true
-        ctx.setResponseDataStream(new ByteArrayInputStream("String".getBytes()));
-        ctx.setResponseBody(null);
-
-        // supportsAuditType return true
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setMethod(HttpMethod.POST.name());
-        ctx.addOriginResponseHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_ATOM_XML_VALUE.toString());
-
-        //httpStatusSuccessful Method - return true
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        response.setStatus(200);
-
-        ctx.setRequest(request);
-        ctx.setResponse(response);
-
-
-        assertEquals(true, this.filter.shouldFilter());
-    }
-
-    @Test
-    public void shouldFilterFalseSupportsAuditTypeHeaderPairFour() throws Exception {
-        // Setup
-        RequestContext ctx = RequestContext.getCurrentContext();
-
-        // contentContains Method - return true
-        ctx.setResponseDataStream(new ByteArrayInputStream("String".getBytes()));
-        ctx.setResponseBody(null);
-
-        // supportsAuditType return false
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setMethod(HttpMethod.POST.name());
-        ctx.addOriginResponseHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF.toString());
-
-        //httpStatusSuccessful Method - return true
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        response.setStatus(200);
-
-        ctx.setRequest(request);
-        ctx.setResponse(response);
-
-
-        assertEquals(false, this.filter.shouldFilter());
-    }
-
-    @Test
-    public void shouldFilterFalseSupportsAuditMethodGet() throws Exception {
-        // Setup
-        RequestContext ctx = RequestContext.getCurrentContext();
-
-        // contentContains Method - return true
-        ctx.setResponseDataStream(new ByteArrayInputStream("String".getBytes()));
-        ctx.setResponseBody(null);
-
-        // supportsAuditType return false
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setMethod(HttpMethod.GET.name());
-        ctx.addOriginResponseHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_ATOM_XML_VALUE.toString());
-
-        //httpStatusSuccessful Method - return true
+       // supportsAuditType return false && httpStatusSuccessful return true
         MockHttpServletResponse response = new MockHttpServletResponse();
         response.setStatus(200);
 
@@ -286,12 +180,11 @@ public class AscentGatewayAuditFilterTest {
         ctx.setResponseDataStream(new ByteArrayInputStream("String".getBytes()));
         ctx.setResponseBody(null);
 
-        // supportsAuditType return true
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setMethod(HttpMethod.POST.name());
         ctx.addOriginResponseHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_ATOM_XML_VALUE.toString());
 
-        //httpStatusSuccessful Method - return false
+       // supportsAuditType return true && httpStatusSuccessful return false
         MockHttpServletResponse response = new MockHttpServletResponse();
         response.setStatus(0);
 
@@ -303,7 +196,7 @@ public class AscentGatewayAuditFilterTest {
     }
 
     @Test
-    public void shouldFilterTrueHttpStatusSuccessfulSuccess() throws Exception {
+    public void shouldFilterFalseHttpStatusSuccessfulSuccess() throws Exception {
         // Setup
         RequestContext ctx = RequestContext.getCurrentContext();
 
@@ -311,12 +204,11 @@ public class AscentGatewayAuditFilterTest {
         ctx.setResponseDataStream(new ByteArrayInputStream("String".getBytes()));
         ctx.setResponseBody(null);
 
-        // supportsAuditType return true
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setMethod(HttpMethod.POST.name());
         ctx.addOriginResponseHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_ATOM_XML_VALUE.toString());
 
-        //httpStatusSuccessful Method - return true
+       // supportsAuditType return false && httpStatusSuccessful return true
         MockHttpServletResponse response = new MockHttpServletResponse();
         response.setStatus(200);
 
@@ -324,11 +216,11 @@ public class AscentGatewayAuditFilterTest {
         ctx.setResponse(response);
 
 
-        assertEquals(true, this.filter.shouldFilter());
+        assertEquals(false, this.filter.shouldFilter());
     }
 
     @Test
-    public void shouldFilterTrueHttpStatusSuccessfulRedirect() throws Exception {
+    public void shouldFilterFalseHttpStatusSuccessfulRedirect() throws Exception {
         // Setup
         RequestContext ctx = RequestContext.getCurrentContext();
 
@@ -336,12 +228,11 @@ public class AscentGatewayAuditFilterTest {
         ctx.setResponseDataStream(new ByteArrayInputStream("String".getBytes()));
         ctx.setResponseBody(null);
 
-        // supportsAuditType return true
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setMethod(HttpMethod.POST.name());
         ctx.addOriginResponseHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_ATOM_XML_VALUE.toString());
 
-        //httpStatusSuccessful Method - return true
+        // supportsAuditType return false && httpStatusSuccessful return true
         MockHttpServletResponse response = new MockHttpServletResponse();
         response.setStatus(304);
 
@@ -349,7 +240,7 @@ public class AscentGatewayAuditFilterTest {
         ctx.setResponse(response);
 
 
-        assertEquals(true, this.filter.shouldFilter());
+        assertEquals(false, this.filter.shouldFilter());
     }
 
     @Test
@@ -366,7 +257,7 @@ public class AscentGatewayAuditFilterTest {
         request.setMethod(HttpMethod.POST.name());
         ctx.addOriginResponseHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_ATOM_XML_VALUE.toString());
 
-        //httpStatusSuccessful Method - return false
+        // supportsAuditType return true && httpStatusSuccessful return false
         MockHttpServletResponse response = new MockHttpServletResponse();
         response.setStatus(500);
 
@@ -430,7 +321,6 @@ public class AscentGatewayAuditFilterTest {
         doNothing().when(tracer).addTag(any(String.class), any(String.class));
         this.filter.run();
         verify(tracer, times(1)).addTag(eq("http.response"),any(String.class));
-        verify(auditHelper, times(1)).addTracerTagsAsync(any(String.class));
     }
 
 }

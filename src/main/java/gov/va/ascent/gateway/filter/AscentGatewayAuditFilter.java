@@ -3,11 +3,6 @@ package gov.va.ascent.gateway.filter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,16 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.Tracer;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import com.netflix.util.Pair;
 import com.netflix.zuul.context.RequestContext;
-
-import gov.va.ascent.gateway.audit.AscentGatewayAuditHelper;
 
 
 public class AscentGatewayAuditFilter extends AscentGatewayAbstractFilter {
@@ -38,17 +27,9 @@ public class AscentGatewayAuditFilter extends AscentGatewayAbstractFilter {
 	private static final String SPAN_HTTP_RESPONSE = "http.response";
 
 
-    private static final Set<String> MEDIA_TYPE_LIST = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            MediaType.APPLICATION_JSON.toString(),
-            MediaType.APPLICATION_JSON_UTF8_VALUE,
-            MediaType.APPLICATION_XML_VALUE,
-            MediaType.APPLICATION_ATOM_XML_VALUE
-    )));
-
 	@Autowired Tracer tracer;
-	@Autowired AscentGatewayAuditHelper auditHelper;
-
-
+	
+	
 	@Override
 	public String filterType() {
 		return "post";
@@ -80,13 +61,7 @@ public class AscentGatewayAuditFilter extends AscentGatewayAbstractFilter {
 	}
 
 	private boolean supportsAuditType(final RequestContext context) {
-		Optional<Pair<String, String>> contentTypeHeaderPair =
-				context.getOriginResponseHeaders().stream().filter(
-						obj -> obj.first().equals(HttpHeaders.CONTENT_TYPE)
-						&& (MEDIA_TYPE_LIST.contains(obj.second()))).findFirst();
-
-		return ((context.getRequest().getMethod().equals(HttpMethod.POST.name()) && contentTypeHeaderPair.isPresent())
-				|| !httpStatusSuccessful(context.getResponse()));
+		return (!httpStatusSuccessful(context.getResponse()));
 	}
 
 	@Override
@@ -101,9 +76,8 @@ public class AscentGatewayAuditFilter extends AscentGatewayAbstractFilter {
 
 		/**
 		 *  AUDIT THE REQUEST AND RESPONSE ADDED TO TRACER FOR SLEUTH (org.springframework.cloud.sleuth.Tracer)
-		 *  ANY OF THE BELOW CONDITIONS WOULD TRIGGER ADDING AUDIT TAGS
-		 *  1) METHOD TYPE AS POST AND CONTENT TYPE AS JSON or XML OR
-		 *  2) HTTP ERROR RESPONSE
+		 *  BELOW CONDITIONS WOULD TRIGGER ADDING AUDIT TAGS
+		 *  1) HTTP ERROR RESPONSE
 		 */
 		String responseMessage = "";
 		try {
@@ -123,7 +97,6 @@ public class AscentGatewayAuditFilter extends AscentGatewayAbstractFilter {
 				responseMessage = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
 				ctx.setResponseBody(responseMessage);
 				LOGGER.debug("Response:: {}", responseMessage);
-				auditHelper.addTracerTagsAsync(responseMessage);
 			} catch (IOException e) {
 				LOGGER.warn("IOException Response InputStream:: {}", e);
 			}
