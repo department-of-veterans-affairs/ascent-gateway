@@ -1,14 +1,14 @@
 package gov.va.ascent.gateway.filter;
 
-import com.netflix.zuul.context.RequestContext;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import static org.junit.Assert.assertEquals;
-import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
+import com.netflix.zuul.context.RequestContext;
 
 
 public class AscentGatewayPreFilterTest {
@@ -16,8 +16,6 @@ public class AscentGatewayPreFilterTest {
     private AscentGatewayPreFilter filter;
 
     private MockHttpServletRequest request = new MockHttpServletRequest();
-
-    private ProxyRequestHelper proxyRequestHelper = new ProxyRequestHelper();
 
     @Before
     public void init() {

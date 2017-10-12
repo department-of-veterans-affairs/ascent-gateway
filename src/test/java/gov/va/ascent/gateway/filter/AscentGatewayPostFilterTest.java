@@ -1,6 +1,9 @@
 package gov.va.ascent.gateway.filter;
 
-import com.netflix.zuul.context.RequestContext;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.MockitoAnnotations.initMocks;
+import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.POST_TYPE;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,12 +14,7 @@ import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.discovery.DiscoveryClientRouteLocator;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.ws.rs.POST;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.ERROR_TYPE;
-import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.POST_TYPE;
+import com.netflix.zuul.context.RequestContext;
 
 public class AscentGatewayPostFilterTest {
 

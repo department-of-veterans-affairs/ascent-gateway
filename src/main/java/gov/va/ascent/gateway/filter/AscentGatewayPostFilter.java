@@ -19,6 +19,23 @@ public class AscentGatewayPostFilter extends AscentGatewayAbstractFilter {
 	
 	/*
 	 * (non-Javadoc)
+	 * @see com.netflix.zuul.IZuulFilter#run()
+	 */
+	@Override
+	public Object run() {
+		RequestContext ctx = RequestContext.getCurrentContext();
+		HttpServletRequest request = ctx.getRequest();
+		MDC.put("http.response", String.valueOf(ctx.getResponseStatusCode()));
+		LOGGER.info(String.format("Completed Request %s request for %s", request.getMethod(), request.getRequestURL().toString()));
+		if (LOGGER.isDebugEnabled()) {
+			debugRequestResponse(ctx);
+		}
+		MDC.clear();
+		return null;
+	}
+	
+	/*
+	 * (non-Javadoc)
 	 * @see com.netflix.zuul.ZuulFilter#filterType()
 	 */
 	@Override
@@ -44,20 +61,4 @@ public class AscentGatewayPostFilter extends AscentGatewayAbstractFilter {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.netflix.zuul.IZuulFilter#run()
-	 */
-	@Override
-	public Object run() {
-		RequestContext ctx = RequestContext.getCurrentContext();
-		HttpServletRequest request = ctx.getRequest();
-		MDC.put("http.response", String.valueOf(ctx.getResponseStatusCode()));
-		LOGGER.info(String.format("Completed Request %s request for %s", request.getMethod(), request.getRequestURL().toString()));
-		if (LOGGER.isDebugEnabled()) {
-			debugRequestResponse(ctx);
-		}
-		MDC.clear();
-		return null;
-	}
 }
