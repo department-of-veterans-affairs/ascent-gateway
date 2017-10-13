@@ -29,11 +29,13 @@ public abstract class AscentGatewayAbstractFilter extends ZuulFilter {
             LOGGER.debug("Request Header: {} -> {}", key, value);
         }
 
-        Collection<String> responseHeaderNames = response.getHeaderNames();
-        responseHeaderNames.forEach(key->{
-            String value = response.getHeader(key);
-            LOGGER.debug("Response Header: {} -> {}", key, value);
-        });
+        if (response != null) {
+	        Collection<String> responseHeaderNames = response.getHeaderNames();
+	        responseHeaderNames.forEach(key->{
+	            String value = response.getHeader(key);
+	            LOGGER.debug("Response Header: {} -> {}", key, value);
+	        });
+        }
     }
 
 }
