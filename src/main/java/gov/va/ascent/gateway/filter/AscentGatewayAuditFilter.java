@@ -3,9 +3,11 @@ package gov.va.ascent.gateway.filter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Enumeration;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +17,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.http.HttpHeaders;
@@ -25,19 +26,25 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import com.netflix.util.Pair;
-import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 
 import gov.va.ascent.gateway.audit.AscentGatewayAuditHelper;
 
 
-public class AscentGatewayAuditFilter extends ZuulFilter {
+public class AscentGatewayAuditFilter extends AscentGatewayAbstractFilter {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(AscentGatewayAuditFilter.class);
-	public static final String SPAN_HTTP_REQUEST = "http.request";
-	public static final String SPAN_HTTP_RESPONSE = "http.response";
+	private static final Logger LOGGER = LoggerFactory.getLogger(AscentGatewayAuditFilter.class);
+	private static final String SPAN_HTTP_REQUEST = "http.request";
+	private static final String SPAN_HTTP_RESPONSE = "http.response";
 
-	@Autowired ErrorAttributes errorAttributes;
+
+    private static final Set<String> MEDIA_TYPE_LIST = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+            MediaType.APPLICATION_JSON.toString(),
+            MediaType.APPLICATION_JSON_UTF8_VALUE,
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_ATOM_XML_VALUE
+    )));
+
 	@Autowired Tracer tracer;
 	@Autowired AscentGatewayAuditHelper auditHelper;
 
@@ -76,15 +83,10 @@ public class AscentGatewayAuditFilter extends ZuulFilter {
 		Optional<Pair<String, String>> contentTypeHeaderPair =
 				context.getOriginResponseHeaders().stream().filter(
 						obj -> obj.first().equals(HttpHeaders.CONTENT_TYPE)
-						&& (obj.second().contains(MediaType.APPLICATION_JSON_UTF8_VALUE) 
-								|| obj.second().contains(MediaType.APPLICATION_JSON_VALUE)
-								|| obj.second().contains(MediaType.APPLICATION_XML_VALUE) 
-								|| obj.second().contains(MediaType.APPLICATION_ATOM_XML_VALUE))).findFirst();
-		if ((context.getRequest().getMethod().equals(HttpMethod.POST.name()) && contentTypeHeaderPair.isPresent()) 
-				|| !httpStatusSuccessful(context.getResponse())) {
-			return true;
-		}
-		return false;
+						&& (MEDIA_TYPE_LIST.contains(obj.second()))).findFirst();
+
+		return ((context.getRequest().getMethod().equals(HttpMethod.POST.name()) && contentTypeHeaderPair.isPresent())
+				|| !httpStatusSuccessful(context.getResponse()));
 	}
 
 	@Override
@@ -94,7 +96,7 @@ public class AscentGatewayAuditFilter extends ZuulFilter {
 		HttpServletResponse response = ctx.getResponse();
 
 		if (LOGGER.isDebugEnabled()) {
-			debugRequestResponse(ctx, request, response);
+			debugRequestResponse(ctx);
 		}
 
 		/**
@@ -156,25 +158,4 @@ public class AscentGatewayAuditFilter extends ZuulFilter {
 		return httpStatusSeries == HttpStatus.Series.SUCCESSFUL || httpStatusSeries == HttpStatus.Series.REDIRECTION;
 	}
 
-	private void debugRequestResponse(final RequestContext ctx,
-			final HttpServletRequest request,
-			final HttpServletResponse response) {
-
-		LOGGER.debug("Request :: < " + request.getScheme() + " " + request.getLocalAddr() + ":" + request.getLocalPort());
-		LOGGER.debug("Request :: < " + request.getMethod() + " " + request.getRequestURI() + " " + request.getProtocol());
-		LOGGER.debug("Response:: > HTTP:" + ctx.getResponseStatusCode());
-
-		Enumeration<String> requestHeaderNames = request.getHeaderNames();  
-		while (requestHeaderNames.hasMoreElements()) {
-			String key = (String) requestHeaderNames.nextElement();
-			String value = request.getHeader(key);
-			LOGGER.debug("Request Header: {} -> {}", key, value);
-		}
-
-		Collection<String> responseHeaderNames = response.getHeaderNames();
-		responseHeaderNames.forEach(key->{
-			String value = response.getHeader(key);
-			LOGGER.debug("Response Header: {} -> {}", key, value);
-		});
-	}
 }
