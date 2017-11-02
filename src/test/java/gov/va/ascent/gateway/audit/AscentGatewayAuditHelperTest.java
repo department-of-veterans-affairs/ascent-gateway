@@ -48,7 +48,7 @@ public class AscentGatewayAuditHelperTest {
     // It's not quite necessary but it also shows you how it can be done
     @Before
     public void setup() {
-        final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        final Logger logger = (Logger) LoggerFactory.getLogger(AscentGatewayAuditHelper.class);
         logger.setLevel(Level.DEBUG);
         logger.addAppender(mockAppender);
     }
@@ -59,7 +59,7 @@ public class AscentGatewayAuditHelperTest {
     @SuppressWarnings("unchecked")
     @After
     public void teardown() {
-        final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        final Logger logger = (Logger) LoggerFactory.getLogger(AscentGatewayAuditHelper.class);
         logger.detachAppender(mockAppender);
     }
 
@@ -96,7 +96,7 @@ public class AscentGatewayAuditHelperTest {
 
     @Test
     public void addTracerTagsAsyncTestLoggerDebugOff() {
-        final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        final Logger logger = (Logger) LoggerFactory.getLogger(AscentGatewayAuditHelper.class);
         logger.setLevel(Level.ERROR);
         ascentGatewayAuditHelper.addTracerTagsAsync("{\"response\":\"test response\"}");
         // Now verify our logging interactions
