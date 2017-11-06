@@ -1,6 +1,5 @@
 package gov.va.ascent.gateway.filter;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
@@ -31,9 +30,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.List;
+
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration
@@ -50,6 +49,7 @@ public class AscentGatewayPreFilterTest {
     private AscentGatewayPreFilter filter;
 
     private MockHttpServletRequest request = new MockHttpServletRequest();
+    
 
     @Before
     public void init() {
@@ -81,6 +81,11 @@ public class AscentGatewayPreFilterTest {
 
     @Test
     public void runTestNoPersonTraits() throws Exception {
+    	
+    	Logger root = (Logger)LoggerFactory.getLogger(this.getClass());
+    	Level originalLevel = root.getLevel();
+    	root.setLevel(Level.DEBUG);
+    	
         Object obj = this.filter.run();
         verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
         final List<LoggingEvent> loggingEvents = captorLoggingEvent.getAllValues();
@@ -94,10 +99,9 @@ public class AscentGatewayPreFilterTest {
     public void runTestPersonTraits() throws Exception {
         request.addHeader("TestHeader", "TestReqHeaderValue");
         Object obj = this.filter.run();
-        verify(mockAppender, times(2)).doAppend(captorLoggingEvent.capture());
+        verify(mockAppender, times(1)).doAppend(captorLoggingEvent.capture());
         final List<LoggingEvent> loggingEvents = captorLoggingEvent.getAllValues();
-        assertEquals("Request Header: {} -> {}", loggingEvents.get(0).getMessage());
-        assertEquals("Zuul Filter:   request to http://localhost", loggingEvents.get(1).getMessage());
+        assertEquals("Zuul Filter:   request to http://localhost", loggingEvents.get(0).getMessage());
         assertEquals(null, obj);
     }
 
@@ -112,6 +116,8 @@ public class AscentGatewayPreFilterTest {
         Object obj = this.filter.run();
         verify(mockAppender, times(0)).doAppend(captorLoggingEvent.capture());
         assertEquals(null, obj);
+
     }
+    
 
 }

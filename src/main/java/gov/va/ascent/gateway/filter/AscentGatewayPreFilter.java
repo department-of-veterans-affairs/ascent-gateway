@@ -1,7 +1,5 @@
 package gov.va.ascent.gateway.filter;
 
-import java.util.Enumeration;
-
 import javax.servlet.http.HttpServletRequest;
 
 import gov.va.ascent.framework.security.SecurityUtils;
@@ -26,12 +24,7 @@ public class AscentGatewayPreFilter extends AscentGatewayAbstractFilter {
 		}
 		if (LOGGER.isDebugEnabled()) {
             ctx.setDebugRequest(true);
-		    Enumeration<String> headerNames = request.getHeaderNames();
-			while (headerNames.hasMoreElements()) {
-				String key = headerNames.nextElement();
-				String value = request.getHeader(key);
-				LOGGER.debug("Request Header: {} -> {}", key, value);
-			}
+            debugRequestResponse(ctx);
 	    }
 
 	    LOGGER.info(String.format("Zuul Filter:  %s request to %s", request.getMethod(), request.getRequestURL().toString()));
