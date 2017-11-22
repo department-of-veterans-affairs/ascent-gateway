@@ -2,6 +2,7 @@ package gov.va.ascent.gateway.filter;
 
 import javax.servlet.http.HttpServletRequest;
 
+import gov.va.ascent.framework.audit.AuditLogger;
 import gov.va.ascent.framework.security.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,8 @@ public class AscentGatewayPreFilter extends AscentGatewayAbstractFilter {
             debugRequestResponse(ctx);
 	    }
 
-	    LOGGER.info(String.format("Zuul Filter:  %s request to %s", request.getMethod(), request.getRequestURL().toString()));
+		LOGGER.info(String.format("Zuul Filter:  %s request to %s", AuditLogger.sanitize(request.getMethod()),
+				AuditLogger.sanitize(request.getRequestURL().toString())));
 
 	    return null;
 	}
