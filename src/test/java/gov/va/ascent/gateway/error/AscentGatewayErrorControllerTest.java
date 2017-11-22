@@ -1,8 +1,9 @@
 package gov.va.ascent.gateway.error;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import org.junit.Ignore;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.Map;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -10,17 +11,13 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.cloud.sleuth.Tracer;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.request.RequestAttributes;
 
-import java.util.Map;
-
-import static org.junit.Assert.assertNotNull;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
