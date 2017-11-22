@@ -50,14 +50,10 @@ public class AscentGatewayAuditFilter extends AscentGatewayAbstractFilter {
 	public boolean shouldFilter() {
 		final RequestContext context = RequestContext.getCurrentContext();
 		if (context != null) {
-			return containsContent(context) && supportsAuditType(context);
+			return supportsAuditType(context);
 		} else {
 			return false;
 		}
-	}
-
-	private boolean containsContent(final RequestContext context) {
-		return context.getResponseDataStream() != null || context.getResponseBody() != null;
 	}
 
 	private boolean supportsAuditType(final RequestContext context) {

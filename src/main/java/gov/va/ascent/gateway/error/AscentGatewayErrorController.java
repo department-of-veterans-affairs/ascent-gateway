@@ -26,6 +26,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.netflix.zuul.context.RequestContext;
 
+import gov.va.ascent.framework.audit.AuditLogger;
+
 
 @RestController
 public class AscentGatewayErrorController extends AbstractErrorController {
@@ -55,8 +57,10 @@ public class AscentGatewayErrorController extends AbstractErrorController {
 	public ResponseEntity<Map<String, Object>> error(HttpServletRequest request, HttpServletResponse response) {
 		MDC.put("http.request", tracer.getCurrentSpan().getName());
 		MDC.put("http.response", String.valueOf(response.getStatus()));
-		LOGGER.error("REQUEST :: < " + request.getScheme() + " " + request.getLocalAddr() + ":" + request.getLocalPort());
-		LOGGER.error("REQUEST :: < " + request.getMethod() + " " + request.getRequestURI() + " " + request.getProtocol());
+		LOGGER.error("REQUEST :: < " + AuditLogger.sanitize(request.getScheme()) + " "
+				+ AuditLogger.sanitize(request.getLocalAddr()) + ":" + request.getLocalPort());
+		LOGGER.error("REQUEST :: < " + AuditLogger.sanitize(request.getMethod()) + " "
+				+ AuditLogger.sanitize(request.getRequestURI()) + " " + AuditLogger.sanitize(request.getProtocol()));
 		LOGGER.error("RESPONSE:: > HTTP:" + response.getStatus());
 		int status = response.getStatus();
 		if (status == 0) {
@@ -73,6 +77,8 @@ public class AscentGatewayErrorController extends AbstractErrorController {
 				LOGGER.error("Error Response:: {}", errorMessage);
 			} catch (IOException e) {
 				LOGGER.error("IOException:: {}", e);
+			} finally {
+				IOUtils.closeQuietly(inputStream);
 			}
 		}
 		LOGGER.debug("Tracer Current Span: {}", this.tracer.getCurrentSpan());
