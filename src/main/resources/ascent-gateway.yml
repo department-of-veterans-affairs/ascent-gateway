@@ -67,16 +67,16 @@ hystrix:
             # is configuration for turning off timeouts per-command, if that is desired (see command.timeout.enabled). 
             # IMPORTANT NOTE: THIS TIMEOUT VALUE MUST BE GREATER THAN ANY SERVICE TIMEOUT TO AVOID ERRORS
             # Default Value: 1000
-            timeoutInMilliseconds: 10000
+            timeoutInMilliseconds: 20000
 #  Ribbon Read Timeout for Ascent Demo Service requests
 ascent-demo-service:
   ribbon:
     ReadTimeout: 10000
-    ConnectTimeout: 10000
+    ConnectTimeout: 5000
 #  Default Ribbon Read Timeout for ALL the requests
 ribbon:
   ReadTimeout: 10000
-  ConnectTimeout: 10000
+  ConnectTimeout: 5000
   # client side to refresh every 10 seconds
   ServerListRefreshInterval: 10000
   MaxAutoRetries: 1
