@@ -8,6 +8,7 @@ info:
     description: "@project.description@"  
 zuul:
   prefix: /api
+  retryable: true
   sensitiveHeaders: Cookie, Set-Cookie
 #  Uncomment to disable services automatically registering in Zuul
 #  ignoredServices: '*'     
@@ -76,6 +77,11 @@ ascent-demo-service:
 ribbon:
   ReadTimeout: 10000
   ConnectTimeout: 10000
+  # client side to refresh every 10 seconds
+  ServerListRefreshInterval: 10000
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 2
+  OkToRetryOnAllOperations: true
 ascent:
   security:
     jwt:
