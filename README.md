@@ -9,6 +9,6 @@ This is a repository for the ascent gateway service that provides dynamic routin
 **Service Application Port**
 * Gateway - 8762
 
-See [Ascent-Gateway](https://github.com/department-of-veterans-affairs/ascent-platform/wiki/Ascent-Gateway) for additional details.
+See [Ascent-Gateway](https://github.com/department-of-veterans-affairs/ascent-platform/wiki/PLATFORM-:-Ascent-Gateway) for additional details.
 
-See [Ascent Quick Start Guide](https://github.com/department-of-veterans-affairs/ascent-platform/wiki/Ascent-Quick-Start-Guide) for the software prerequisites.
+See [Ascent Quick Start Guide](https://github.com/department-of-veterans-affairs/ascent-platform/wiki/DEV-:-Platform-Quick-Start-Guide) for the software prerequisites.
