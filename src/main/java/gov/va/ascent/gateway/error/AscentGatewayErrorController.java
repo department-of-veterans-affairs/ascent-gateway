@@ -26,7 +26,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.netflix.zuul.context.RequestContext;
 
-import gov.va.ascent.framework.audit.AuditLogger;
+import gov.va.ascent.framework.util.SanitizationUtil;
 
 
 @RestController
@@ -57,10 +57,10 @@ public class AscentGatewayErrorController extends AbstractErrorController {
 	public ResponseEntity<Map<String, Object>> error(HttpServletRequest request, HttpServletResponse response) {
 		MDC.put("http.request", tracer.getCurrentSpan().getName());
 		MDC.put("http.response", String.valueOf(response.getStatus()));
-		LOGGER.error("REQUEST :: < " + AuditLogger.sanitize(request.getScheme()) + " "
-				+ AuditLogger.sanitize(request.getLocalAddr()) + ":" + request.getLocalPort());
-		LOGGER.error("REQUEST :: < " + AuditLogger.sanitize(request.getMethod()) + " "
-				+ AuditLogger.sanitize(request.getRequestURI()) + " " + AuditLogger.sanitize(request.getProtocol()));
+		LOGGER.error("REQUEST :: < " + SanitizationUtil.stripXSS(request.getScheme()) + " "
+				+ SanitizationUtil.stripXSS(request.getLocalAddr()) + ":" + request.getLocalPort());
+		LOGGER.error("REQUEST :: < " + SanitizationUtil.stripXSS(request.getMethod()) + " "
+				+ SanitizationUtil.stripXSS(request.getRequestURI()) + " " + SanitizationUtil.stripXSS(request.getProtocol()));
 		LOGGER.error("RESPONSE:: > HTTP:" + response.getStatus());
 		int status = response.getStatus();
 		if (status == 0) {

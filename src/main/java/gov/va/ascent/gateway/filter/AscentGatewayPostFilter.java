@@ -10,7 +10,7 @@ import org.springframework.cloud.sleuth.Tracer;
 
 import com.netflix.zuul.context.RequestContext;
 
-import gov.va.ascent.framework.audit.AuditLogger;
+import gov.va.ascent.framework.util.SanitizationUtil;
 
 
 public class AscentGatewayPostFilter extends AscentGatewayAbstractFilter {
@@ -28,8 +28,8 @@ public class AscentGatewayPostFilter extends AscentGatewayAbstractFilter {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		HttpServletRequest request = ctx.getRequest();
 		MDC.put("http.response", String.valueOf(ctx.getResponseStatusCode()));
-		LOGGER.info(String.format("Completed Request %s request for %s", AuditLogger.sanitize(request.getMethod()),
-				AuditLogger.sanitize(request.getRequestURL().toString())));
+		LOGGER.info(String.format("Completed Request %s request for %s", SanitizationUtil.stripXSS(request.getMethod()),
+				SanitizationUtil.stripXSS(request.getRequestURL().toString())));
 		if (LOGGER.isDebugEnabled()) {
 			debugRequestResponse(ctx);
 		}
