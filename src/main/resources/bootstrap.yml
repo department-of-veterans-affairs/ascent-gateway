@@ -9,7 +9,7 @@ spring:
         enabled: true
         serviceId: ascent-config
       failFast: true
-      label: zuul-routes-test
+      label: development
       username: ${ascent.security.username:admin}
       password: ${ascent.security.password:default}
       retry:
