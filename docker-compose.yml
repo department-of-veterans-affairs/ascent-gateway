@@ -43,7 +43,7 @@ services:
       - VAULT_ADDR=${VAULT_ADDR}
       - VAULT_TOKEN=${VAULT_TOKEN}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8760/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8762/actuator/health"]
       interval: 60s
       timeout: 10s
       retries: 3
