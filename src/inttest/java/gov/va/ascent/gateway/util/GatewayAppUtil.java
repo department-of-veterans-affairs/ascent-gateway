@@ -39,7 +39,7 @@ public class GatewayAppUtil {
 			if(port !=null) {
 				urlBuffer.append(port);
 			}
-			//String finalUrl = protocol + "://" + userName + ":" + password + "@" + host + port ;
+			
 			return urlBuffer.toString();
 		}
 		return baseURL;

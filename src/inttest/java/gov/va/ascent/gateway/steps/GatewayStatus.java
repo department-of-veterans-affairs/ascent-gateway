@@ -14,7 +14,6 @@ import cucumber.api.java.en.When;
 import gov.va.ascent.gateway.util.GatewayAppUtil;
 import gov.va.ascent.test.framework.restassured.BaseStepDef;
 
-
 public class GatewayStatus extends BaseStepDef {
 
 	final Logger log = LoggerFactory.getLogger(GatewayStatus.class);
@@ -23,7 +22,7 @@ public class GatewayStatus extends BaseStepDef {
 	public void setUpREST() {
 		initREST();
 	}
-	
+
 	@Given("^I pass the header information for gateway service$")
 	public void passTheHeaderInformationForDashboard(Map<String, String> tblHeader) throws Throwable {
 		passHeaderInformation(tblHeader);
@@ -31,11 +30,10 @@ public class GatewayStatus extends BaseStepDef {
 
 	@When("^user makes a request to gateway \"([^\"]*)\"$")
 	public void makerequesusttogatewaylGet(String strURL) throws Throwable {
-		 //String baseUrl = restConfig.getPropertyName("baseURL", false);
-		 invokeAPIUsingGet(GatewayAppUtil.getBaseURL() + strURL, false);
+		invokeAPIUsingGet(GatewayAppUtil.getBaseURL() + strURL, false);
 	}
-	
-		 @Then("^the response code must be for gateway service (\\d+)$")
+
+	@Then("^the response code must be for gateway service (\\d+)$")
 	public void serviceresposestatuscodemustbe(int intStatusCode) throws Throwable {
 		validateStatusCode(intStatusCode);
 	}
