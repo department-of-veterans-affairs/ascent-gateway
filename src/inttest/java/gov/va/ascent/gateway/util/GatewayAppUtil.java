@@ -10,7 +10,7 @@ import gov.va.ascent.test.framework.util.RESTUtil;
 
 public class GatewayAppUtil {
 
-	private static final Pattern urlPattern = Pattern.compile("(http|https)://([A-Za-z0-9\\-\\.]+)$");
+	private static final Pattern urlPattern = Pattern.compile("(http|https)://([A-Za-z0-9\\-\\.]+)(:(\\d+))?$");
 
 	private GatewayAppUtil() {
 
@@ -33,9 +33,14 @@ public class GatewayAppUtil {
 				throw new RuntimeException("Invalid base url!");
 			final String protocol = m.group(1).toLowerCase();
 			final String host = m.group(2);
-
-			String finalUrl = protocol + "://" + userName + ":" + password + "@" + host;
-			return finalUrl;
+			final String port     = m.group(3);
+			StringBuffer urlBuffer = new StringBuffer();
+			urlBuffer.append(protocol).append("://").append(userName).append(":").append(password).append("@").append(host);
+			if(port !=null) {
+				urlBuffer.append(port);
+			}
+			
+			return urlBuffer.toString();
 		}
 		return baseURL;
 	}

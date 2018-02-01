@@ -9,3 +9,4 @@ Feature: Log in to gateway service to check the service is up
   Examples: 
       | ServiceURL          |
       |/actuator/health     |
+      |/actuator/health     |
