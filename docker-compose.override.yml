@@ -1,0 +1,17 @@
+version: '3'
+services:
+  ascent-discovery:
+    ports:
+      - 8761:8761
+  
+  ascent-config:
+    ports:
+      - 8760:8760
+
+  ascent-gateway:
+    ports:
+      - 8762:8762
+  
+networks:
+  ascentnet:
+    driver: bridge
