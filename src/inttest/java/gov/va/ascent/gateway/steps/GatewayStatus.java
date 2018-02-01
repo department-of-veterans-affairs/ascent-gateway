@@ -31,8 +31,8 @@ public class GatewayStatus extends BaseStepDef {
 
 	@When("^user makes a request to gateway \"([^\"]*)\"$")
 	public void makerequesusttogatewaylGet(String strURL) throws Throwable {
-		 String baseUrl = restConfig.getPropertyName("baseURL", false);
-		 invokeAPIUsingGet(baseUrl + strURL, false);
+		 //String baseUrl = restConfig.getPropertyName("baseURL", false);
+		 invokeAPIUsingGet(GatewayAppUtil.getBaseURL() + strURL, false);
 	}
 	
 		 @Then("^the response code must be for gateway service (\\d+)$")
