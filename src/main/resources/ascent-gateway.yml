@@ -102,9 +102,6 @@ spring:
   sleuth:
     stream:
       enabled: false
-  zipkin:
-    enabled: true
-    baseUrl: http://localhost:8700
 management:
   health:
     rabbit:
