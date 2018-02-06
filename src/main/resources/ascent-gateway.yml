@@ -24,7 +24,6 @@ logging:
   level:
     gov:
       va:
-        ascent: INFO
         ascent.gateway: INFO
     org:
       springframework: 
@@ -99,7 +98,7 @@ spring.sleuth.scheduled.skipPattern: "^org.*TestBeanWithScheduledMethodToBeIgnor
 spring.sleuth.rxjava.schedulers.ignoredthreads: HystixMetricPoller,^RxComputation.*$,^RxIoScheduler.*$
 ---
 spring:
-  profiles: local-int
+  profiles: default, local-int
   sleuth:
     stream:
       enabled: false
