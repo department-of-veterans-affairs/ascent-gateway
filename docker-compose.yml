@@ -1,5 +1,19 @@
 version: '3'
 services:
+  ascent-amqp:
+    image: ascent/rabbitmq
+    environment:
+      - VAULT_TOKEN=${VAULT_TOKEN}
+      - VAULT_ADDR=${VAULT_ADDR}
+    networks:
+      ascentnet:
+        aliases:
+          - rabbit
+  consul:
+    image: consul:1.0.2
+    networks:
+      - ascentnet
+
   ascent-discovery:
     image: ascent/ascent-discovery
     environment:
@@ -15,7 +29,6 @@ services:
         - ascentnet
     ports:
         - 8761
-  
   ascent-config:
     image: ascent/ascent-config
     ports:

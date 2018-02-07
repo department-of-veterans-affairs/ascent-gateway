@@ -7,10 +7,14 @@ services:
   ascent-config:
     ports:
       - 8760:8760
+    depends_on:
+      - ascent-discovery
 
   ascent-gateway:
     ports:
       - 8762:8762
+    depends_on:
+      - ascent-config
   
 networks:
   ascentnet:
