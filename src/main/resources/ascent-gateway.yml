@@ -96,6 +96,11 @@ spring.sleuth.web.skipPattern: (/api/.*/webjars.*|/api/.*/v2/api-docs.*|/api/.*/
 spring.sleuth.scheduled.skipPattern: "^org.*TestBeanWithScheduledMethodToBeIgnored$"
 # comma separated list of matchers
 spring.sleuth.rxjava.schedulers.ignoredthreads: HystixMetricPoller,^RxComputation.*$,^RxIoScheduler.*$
+
+# Added for MultiPart File Uploads
+# Tomcat upload file configuration
+spring.http.multipart.max-file-size: 25MB # Max file size. Values can use the suffixed "MB" or "KB" to indicate a Megabyte or Kilobyte size.
+spring.http.multipart.max-request-size: 26MB # Max request size. Values can use the suffixed "MB" or "KB" to indicate a Megabyte or Kilobyte size.
 ---
 spring:
   profiles: default, local-int
