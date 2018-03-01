@@ -17,9 +17,9 @@ src/inttest/java/gov/va/ascent/gateway/runner - Cucumber runner class that conta
 
 src/inttest/resources/logback-test.xml - Logback Console Appender pattern and loggers defined for this project
 
-src/inttest/resources/config/vetsapi-ci.properties – CI configuration properties such as URL are specified here.
+src/inttest/resources/config/vetservices-ci.properties – CI configuration properties such as URL are specified here.
 
-src/inttest/resources/config/vetsapi-stage.properties – STAGE configuration properties such as URL are specified here.
+src/inttest/resources/config/vetservices-stage.properties – STAGE configuration properties such as URL are specified here.
 
 ## Execution ##
 **Command Line:** Use this command(s) to execute the gateway acceptance test. 
@@ -28,9 +28,9 @@ Default Local: mvn -Ddockerfile.skip=true integration-test -Pinttest
 
 Use below sample commands to execute for different environment:
 
-CI: mvn -Ddockerfile.skip=true integration-test -Pinttest -Dtest.env=ci -DX-Vault-Token=<>  -DbaseURL=https://ci.internal.vets-api.gov -Dvault.url=https://vault.internal.vets-api.gov:8200/v1/secret/application
+CI: mvn -Ddockerfile.skip=true integration-test -Pinttest -Dtest.env=ci -DX-Vault-Token=<>  -DbaseURL=https://ci.internal.vetservices.gov -Dvault.url=https://vault.internal.vetservices.gov:8200/v1/secret/application
 
-STAGE: mvn -Ddockerfile.skip=true integration-test -Pinttest -Dtest.env=stage -DX-Vault-Token=<>  -DbaseURL=https://stage.internal.vets-api.gov -Dvault.url=https://vault.internal.vets-api.gov:8200/v1/secret/application
+STAGE: mvn -Ddockerfile.skip=true integration-test -Pinttest -Dtest.env=stage -DX-Vault-Token=<>  -DbaseURL=https://stage.internal.vetservices.gov -Dvault.url=https://vault.internal.vetservices.gov:8200/v1/secret/application
 
 The parameter X-Vault-Token is not valid for local environment. It is passed thru pipeline. 
 
