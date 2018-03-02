@@ -9,4 +9,4 @@ Feature: Log in to gateway service to check the gateway route
       Then assert the "<property>" refdata route "<values>" 
   Examples: 
       | ServiceURL       |  property         |      values                   |
-      |/actuator/routes  |  '/api/refdata/**'| vetsapi-refdata-services      |
+      |/actuator/routes  |  '/api/refdata/**'| vetservices-refdata           |
