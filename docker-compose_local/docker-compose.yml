@@ -3,7 +3,7 @@ services:
   ascent-gateway:
     image: ascent/ascent-gateway
     build: 
-      context: ..
+      context: ../../ascent-gateway
     ports:
       - "8762:8762"
     environment:
