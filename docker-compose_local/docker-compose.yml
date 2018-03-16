@@ -1,0 +1,26 @@
+version: "3.3"
+services:
+  ascent-gateway:
+    image: ascent/ascent-gateway
+    build: 
+      context: ../../ascent-gateway
+    ports:
+      - "8762:8762"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - VAULT_ADDR=http://vault:8200
+      - VAULT_TOKEN=vaultroot
+    logging:
+      driver: fluentd
+      options:
+        fluentd-async-connect: "true"
+        fluentd-max-retries: "10"
+        fluentd-retry-wait: "30s"
+    depends_on:
+      - ascent-config
+      - ascent-discovery
+    networks:
+        - ascentnet
+networks:
+  ascentnet:
+    driver: bridge
