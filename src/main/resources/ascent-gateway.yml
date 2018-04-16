@@ -10,6 +10,13 @@ zuul:
   prefix: /api
   retryable: true
   sensitiveHeaders: Cookie, Set-Cookie
+  routes:
+    refdata: 
+      path: /refdata/**
+      url: http://localhost:8080
+    intenttofile:  
+      path: /intenttofile/**
+      url: http://localhost:8080     
 #  Uncomment to disable services automatically registering in Zuul
 #  ignoredServices: '*'     
 endpoints:
