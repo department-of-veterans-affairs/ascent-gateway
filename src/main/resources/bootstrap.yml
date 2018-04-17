@@ -46,6 +46,9 @@ eureka:
     enabled: true
     serviceUrl:
       defaultZone: http://${discovery.username:eureka}:${discovery.password:default}@localhost:${discovery.server.port:8761}/eureka/
+  instance: 
+    hostname: "${INSTANCE_HOST_NAME:localhost}"
+ 
 ---
 
 spring:
