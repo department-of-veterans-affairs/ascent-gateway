@@ -6,9 +6,16 @@ info:
     artifact: "@project.artifactId@"
     name: "@project.name@"
     description: "@project.description@"  
+######################
+### ZUUL PROPERTIES ##
+######################
 zuul:
   prefix: /api
   retryable: true
+  semaphore:
+    # com.netflix.hystrix.exception.HystrixRuntimeException: "microservice" could not acquire a semaphore for execution and no fallback available. 
+    # Default Value = 100
+    max-semaphores: 5000
   sensitiveHeaders: Cookie, Set-Cookie
 #  Uncomment to disable services automatically registering in Zuul
 #  ignoredServices: '*'     
@@ -27,14 +34,10 @@ logging:
         ascent.gateway: INFO
     org:
       springframework: 
-        security: WARN
         cloud:
           sleuth: 
             log: INFO
-            trace: INFO  
-            instrument:
-              web: WARN
-              rxjava: WARN
+            trace: INFO
 #  hystrix command overrides
 hystrix:
   command:
