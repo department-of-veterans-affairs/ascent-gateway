@@ -62,14 +62,8 @@ hystrix:
         # Default Value: 20
         requestVolumeThreshold: 4
       execution:
-        isolation:
-          thread:
-            # This property sets the time in milliseconds after which the caller will observe a timeout and walk away from the 
-            # command execution. Hystrix marks the HystrixCommand as a TIMEOUT, and performs fallback logic. Note that there 
-            # is configuration for turning off timeouts per-command, if that is desired (see command.timeout.enabled). 
-            # IMPORTANT NOTE: THIS TIMEOUT VALUE MUST BE GREATER THAN ANY SERVICE TIMEOUT TO AVOID ERRORS
-            # Default Value: 1000
-            timeoutInMilliseconds: 20000
+        timeout:
+          enabled: false
 #  Ribbon Read Timeout for Ascent Demo Service requests
 ascent-demo-service:
   ribbon:
@@ -77,7 +71,9 @@ ascent-demo-service:
     ConnectTimeout: 5000
 #  Default Ribbon Read Timeout for ALL the requests
 ribbon:
-  ReadTimeout: 10000
+  eager-load:
+    enabled: true
+  ReadTimeout: 60000
   ConnectTimeout: 5000
   # client side to refresh every 10 seconds
   ServerListRefreshInterval: 10000
