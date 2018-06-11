@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>gov.va.ascent</groupId>
 		<artifactId>ascent-platform-parent</artifactId>
-		<version>0.0.5</version>
+		<version>0.0.6-SNAPSHOT</version>
 		<relativePath/>		
 	</parent>
 	
@@ -16,12 +16,6 @@
 
 	<name>${project.artifactId}</name>
 	<description>Ascent Project for Gateway Server</description>
-	
-	<!-- Docker properties to add min and max memory for spring boot jar start up -->
-    <properties>
-		<docker.java.opts.ms>-Xms64m</docker.java.opts.ms>
-		<docker.java.opts.mx>-Xmx256m</docker.java.opts.mx>
-	</properties>
 
 	<dependencies>
 		<!-- spring boot dependencies -->
