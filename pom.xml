@@ -6,22 +6,16 @@
 	<parent>
 		<groupId>gov.va.ascent</groupId>
 		<artifactId>ascent-platform-parent</artifactId>
-		<version>0.0.3-SNAPSHOT</version>
+		<version>0.0.6-SNAPSHOT</version>
 		<relativePath/>		
 	</parent>
 	
 	<artifactId>ascent-gateway</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>${project.artifactId}</name>
 	<description>Ascent Project for Gateway Server</description>
-	
-	<!-- Docker properties to add min and max memory for spring boot jar start up -->
-    <properties>
-		<docker.java.opts.ms>-Xms64m</docker.java.opts.ms>
-		<docker.java.opts.mx>-Xmx256m</docker.java.opts.mx>
-	</properties>
 
 	<dependencies>
 		<!-- spring boot dependencies -->
@@ -120,9 +114,14 @@
 		<dependency>
 			<groupId>gov.va.ascent</groupId>
 			<artifactId>ascent-test-framework</artifactId>
-			<version>${ascent.test.framework.version}</version>
+			<version>${ascent-test-framework.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-test</artifactId>
+	        <scope>test</scope>
+    	</dependency>
 	</dependencies>
 	<build>
 		<plugins>

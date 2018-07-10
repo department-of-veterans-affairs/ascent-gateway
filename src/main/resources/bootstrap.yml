@@ -13,10 +13,10 @@ spring:
       username: ${ascent.security.username:admin}
       password: ${ascent.security.password:default}
       retry:
-        initialInterval: 3000
-        maxInterval: 5000
+        initialInterval: 10000
+        maxInterval: 300000
         multiplier: 1.2
-        maxAttempts: 20
+        maxAttempts: 10
       token: ${VAULT_TOKEN:vaultroot}
 eureka:
   client:
@@ -46,6 +46,9 @@ eureka:
     enabled: true
     serviceUrl:
       defaultZone: http://${discovery.username:eureka}:${discovery.password:default}@localhost:${discovery.server.port:8761}/eureka/
+  instance: 
+    hostname: "${INSTANCE_HOST_NAME:localhost}"
+ 
 ---
 
 spring:
