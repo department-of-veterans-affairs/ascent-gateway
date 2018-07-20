@@ -1,8 +1,11 @@
 package gov.va.ascent.gateway.error;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.doReturn;
 
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,37 +23,44 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AscentGatewayErrorControllerTest {
 
-    @Mock
-    ErrorAttributes errorAttributes = new ErrorAttributes() {
-        @Override
-        public Map<String, Object> getErrorAttributes(RequestAttributes requestAttributes, boolean b) {
-            return null;
-        }
+	@Mock
+	ErrorAttributes errorAttributes = new ErrorAttributes() {
+		@Override
+		public Map<String, Object> getErrorAttributes(final RequestAttributes requestAttributes, final boolean b) {
+			return null;
+		}
 
-        @Override
-        public Throwable getError(RequestAttributes requestAttributes) {
-            return null;
-        }
-    };
+		@Override
+		public Throwable getError(final RequestAttributes requestAttributes) {
+			return null;
+		}
+	};
 
-    @Mock
-    Tracer tracer;
+	@Mock
+	Tracer tracer;
 
-    @Autowired
-    private TestRestTemplate testRestTemplate;
+	@Autowired
+	private TestRestTemplate testRestTemplate;
 
-    @InjectMocks
-    AscentGatewayErrorController controller;
+	@Mock
+	HttpServletResponse response;
 
-    @Test
-    public void errorTest(){
-        String result = testRestTemplate.getForObject("/error", String.class);
-        JsonParser parser = new JsonParser();
-        JsonElement jsonElement = parser.parse(result);
-        assertNotNull(jsonElement.isJsonObject());
-    }
+	@InjectMocks
+	AscentGatewayErrorController controller;
+
+	@Test
+	public void errorTest() {
+		String result = testRestTemplate.getForObject("/error", String.class);
+		final JsonParser parser = new JsonParser();
+		final JsonElement jsonElement = parser.parse(result);
+		assertNotNull(jsonElement.isJsonObject());
+
+		doReturn(0).when(response).getStatus();
+		result = testRestTemplate.getForObject("/error", String.class);
+
+	}
 
 }

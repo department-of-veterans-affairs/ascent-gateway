@@ -28,7 +28,6 @@ import com.netflix.zuul.context.RequestContext;
 
 import gov.va.ascent.framework.util.SanitizationUtil;
 
-
 @RestController
 public class AscentGatewayErrorController extends AbstractErrorController {
 
@@ -40,9 +39,10 @@ public class AscentGatewayErrorController extends AbstractErrorController {
 	@Autowired
 	private ErrorAttributes errorAttributes;
 
-	@Autowired Tracer tracer;
+	@Autowired
+	Tracer tracer;
 
-	public AscentGatewayErrorController(ErrorAttributes errorAttributes) {
+	public AscentGatewayErrorController(final ErrorAttributes errorAttributes) {
 		super(errorAttributes);
 	}
 
@@ -52,9 +52,9 @@ public class AscentGatewayErrorController extends AbstractErrorController {
 	}
 
 	@RequestMapping(value = "${error.path:/error}", produces = "application/json;charset=UTF-8")
-	//TODO: Need to review the method to figure out if this is better way to add span error tag and also the response
+	// NOSONAR TODO: Need to review the method to figure out if this is better way to add span error tag and also the response
 	// status body message to be set using getErrorAttributes(request, true)
-	public ResponseEntity<Map<String, Object>> error(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Map<String, Object>> error(final HttpServletRequest request, final HttpServletResponse response) {
 		MDC.put("http.request", tracer.getCurrentSpan().getName());
 		MDC.put("http.response", String.valueOf(response.getStatus()));
 		LOGGER.error("REQUEST :: < " + SanitizationUtil.stripXSS(request.getScheme()) + " "
@@ -67,22 +67,22 @@ public class AscentGatewayErrorController extends AbstractErrorController {
 			status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 		}
 
-		RequestContext ctx = RequestContext.getCurrentContext();
+		final RequestContext ctx = RequestContext.getCurrentContext();
 		String errorMessage = "Unexpected error occurred";
-		InputStream inputStream = ctx.getResponseDataStream();
+		final InputStream inputStream = ctx.getResponseDataStream();
 
-		if (inputStream!=null) {
+		if (inputStream != null) {
 			try {
 				errorMessage = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
 				LOGGER.error("Error Response:: {}", errorMessage);
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				LOGGER.error("IOException:: {}", e);
 			} finally {
 				IOUtils.closeQuietly(inputStream);
 			}
 		}
 		LOGGER.debug("Tracer Current Span: {}", this.tracer.getCurrentSpan());
-		
+
 		this.tracer.addTag(Span.SPAN_ERROR_TAG_NAME, errorMessage);
 
 		MDC.remove("http.request");
@@ -93,8 +93,8 @@ public class AscentGatewayErrorController extends AbstractErrorController {
 	}
 
 	@Override
-	public Map<String, Object> getErrorAttributes(HttpServletRequest request, boolean includeStackTrace) {
-		RequestAttributes requestAttributes = new ServletRequestAttributes(request);
+	public Map<String, Object> getErrorAttributes(final HttpServletRequest request, final boolean includeStackTrace) {
+		final RequestAttributes requestAttributes = new ServletRequestAttributes(request);
 		return errorAttributes.getErrorAttributes(requestAttributes, includeStackTrace);
 	}
 }
