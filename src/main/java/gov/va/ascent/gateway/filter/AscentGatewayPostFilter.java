@@ -12,33 +12,38 @@ import com.netflix.zuul.context.RequestContext;
 
 import gov.va.ascent.framework.util.SanitizationUtil;
 
-
 public class AscentGatewayPostFilter extends AscentGatewayAbstractFilter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AscentGatewayPostFilter.class);
-	
-	@Autowired Tracer tracer;
-	
+
+	@Autowired
+	Tracer tracer;
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.netflix.zuul.IZuulFilter#run()
 	 */
 	@Override
 	public Object run() {
-		RequestContext ctx = RequestContext.getCurrentContext();
-		HttpServletRequest request = ctx.getRequest();
+		final RequestContext ctx = RequestContext.getCurrentContext();
+		final HttpServletRequest request = ctx.getRequest();
 		MDC.put("http.response", String.valueOf(ctx.getResponseStatusCode()));
-		LOGGER.info(String.format("Completed Request %s request for %s", SanitizationUtil.stripXSS(request.getMethod()),
-				SanitizationUtil.stripXSS(request.getRequestURL().toString())));
+
+		LOGGER.info("Completed Request {}",
+				SanitizationUtil.stripXSS(request.getMethod())
+						+ " for " + SanitizationUtil.stripXSS(request.getRequestURL().toString()));
+
 		if (LOGGER.isDebugEnabled()) {
 			debugRequestResponse(ctx);
 		}
 		MDC.clear();
 		return null;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.netflix.zuul.ZuulFilter#filterType()
 	 */
 	@Override
@@ -48,6 +53,7 @@ public class AscentGatewayPostFilter extends AscentGatewayAbstractFilter {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.netflix.zuul.ZuulFilter#filterOrder()
 	 */
 	@Override
@@ -57,6 +63,7 @@ public class AscentGatewayPostFilter extends AscentGatewayAbstractFilter {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.netflix.zuul.IZuulFilter#shouldFilter()
 	 */
 	@Override

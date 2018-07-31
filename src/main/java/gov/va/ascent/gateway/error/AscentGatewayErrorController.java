@@ -82,15 +82,21 @@ public class AscentGatewayErrorController extends AbstractErrorController {
 	public ResponseEntity<Map<String, Object>> error(final HttpServletRequest request, final HttpServletResponse response) {
 		MDC.put("http.request", tracer.getCurrentSpan().getName());
 		MDC.put("http.response", String.valueOf(response.getStatus()));
-		LOGGER.error("REQUEST :: < " + SanitizationUtil.stripXSS(request.getScheme()) + " "
-				+ SanitizationUtil.stripXSS(request.getLocalAddr()) + ":" + request.getLocalPort());
-		LOGGER.error("REQUEST :: < " + SanitizationUtil.stripXSS(request.getMethod()) + " "
-				+ SanitizationUtil.stripXSS(request.getRequestURI()) + " " + SanitizationUtil.stripXSS(request.getProtocol()));
-		LOGGER.error("RESPONSE:: > HTTP:" + response.getStatus());
+
+		LOGGER.error("REQUEST :: < {}",
+				SanitizationUtil.stripXSS(request.getScheme())
+						+ " " + SanitizationUtil.stripXSS(request.getLocalAddr())
+						+ ":" + request.getLocalPort());
+		LOGGER.error("REQUEST :: < {}",
+				SanitizationUtil.stripXSS(request.getMethod())
+						+ " " + SanitizationUtil.stripXSS(request.getRequestURI())
+						+ " " + SanitizationUtil.stripXSS(request.getProtocol()));
+		LOGGER.error("RESPONSE:: > HTTP:{}", response.getStatus());
+
 		int status = response.getStatus();
 		if (status == 0) {
 			status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-			LOGGER.error("RESPONSE:: > ResponseEntity status modified from 0 to " + status);
+			LOGGER.error("RESPONSE:: > ResponseEntity status modified from 0 to {}", status);
 		}
 
 		final String errorMessage = getErrorMessage(RequestContext.getCurrentContext());
