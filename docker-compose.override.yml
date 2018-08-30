@@ -48,7 +48,6 @@ services:
     - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-docker-demo}
     - VAULT_ADDR=http://vault:8200
     - VAULT_TOKEN=vaultroot
-   # - discovery.server.peer.name=ascent-discovery-peer
     - eureka.client.registerWithEureka=false
     depends_on:
       - vault

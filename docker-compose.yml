@@ -1,20 +1,84 @@
 version: '3.3'
 services:
-
+  ascent-amqp:
+    image: ascent/rabbitmq
+    environment:
+      - 'VAULT_TOKEN=${VAULT_TOKEN}'
+      - 'VAULT_ADDR=${VAULT_ADDR}'
+    networks:
+      ascentnet:
+        aliases:
+          - rabbit
+  consul:
+    image: 'consul:1.0.2'
+    networks:
+      - ascentnet
+  ascent-discovery:
+    image: ascent/ascent-discovery
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-aws-ci}
+      - 'VAULT_ADDR=${VAULT_ADDR}'
+      - 'VAULT_TOKEN=${VAULT_TOKEN}'
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://localhost:8761/health'
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - ascentnet
+    ports:
+      - 8761
+  ascent-config:
+    image: ascent/ascent-config
+    ports:
+      - 8760
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-aws-ci}
+      - 'VAULT_ADDR=${VAULT_ADDR}'
+      - 'VAULT_TOKEN=${VAULT_TOKEN}'
+      - 'VAULT_HOST=${VAULT_HOST}'
+      - 'VAULT_PORT=${VAULT_PORT:-8200}'
+      - VAULT_SCHEME=https
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://localhost:8760/actuator/health'
+      interval: 60s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      - ascent-discovery
+    networks:
+      - ascentnet
   ascent-gateway:
     image: ascent/ascent-gateway
     environment:
-      - SPRING_PROFILES_ACTIVE=docker-demo
-      - VAULT_ADDR=${VAULT_ADDR}
-      - VAULT_TOKEN=${VAULT_TOKEN}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-aws-ci}
+      - 'VAULT_ADDR=${VAULT_ADDR}'
+      - 'VAULT_TOKEN=${VAULT_TOKEN}'
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8762/actuator/health"]
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://localhost:8762/actuator/health'
       interval: 60s
       timeout: 10s
       retries: 3
     networks:
-        - ascentnet
+      - ascentnet
     depends_on:
       - ascent-config
+      - ascent-discovery
     ports:
-        - 8762:8762
+      - 8762
+
+networks:
+  ascentnet:
+    driver: overlay
