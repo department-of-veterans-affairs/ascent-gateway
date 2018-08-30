@@ -1,21 +1,101 @@
-version: '3'
-services:
-  ascent-discovery:
-    ports:
-      - 8761:8761
-  
-  ascent-config:
-    ports:
-      - 8760:8760
-    depends_on:
-      - ascent-discovery
+version: '3.3'
 
+services: 
   ascent-gateway:
+    build:
+      context: .
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-docker-demo}
+      - VAULT_ADDR=http://vault:8200
+      - VAULT_TOKEN=vaultroot
+      # The following line sets up the ability to connect a remote debugger process to port 8000 of the application.
+      # The application will not wait for the debugger to connect with this configuration. If you want the application to wait to
+      # start until the debugger connects, change the "suspend=n" portion of the debug config to "suspend=y"
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
     ports:
       - 8762:8762
+      - 8000:8000
+    logging:
+      driver: json-file
     depends_on:
       - ascent-config
-  
+      - vault
+
+####### Platform Services ########
+
+  ascent-amqp:
+    image: ascent/rabbitmq
+    networks:
+    - ascentnet
+    environment:
+      - VAULT_ADDR=http://vault:8200
+      - VAULT_TOKEN=vaultroot
+    depends_on:
+      - vault
+      - consul
+
+  consul: 
+    image: consul:1.0.2
+    networks:
+      - ascentnet
+
+  ascent-discovery:
+    image: ascent/ascent-discovery
+    hostname: ascent-discovery
+    ports:
+    - 8761:8761
+    environment:
+    - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-docker-demo}
+    - VAULT_ADDR=http://vault:8200
+    - VAULT_TOKEN=vaultroot
+   # - discovery.server.peer.name=ascent-discovery-peer
+    - eureka.client.registerWithEureka=false
+    depends_on:
+      - vault
+    networks:
+    - ascentnet
+
+  ascent-config:
+    image: ascent/ascent-config
+    ports:
+    - 8760:8760
+    environment:
+    - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-docker-demo}
+    - VAULT_ADDR=http://vault:8200
+    - VAULT_TOKEN=vaultroot
+    - VAULT_HOST=vault
+    - VAULT_PORT=8200
+    - VAULT_SCHEME=http
+    depends_on:
+      - ascent-discovery
+      - vault
+      - ascent-amqp
+    networks:
+    - ascentnet
+
+###### Vault ##########
+
+  vault:
+    image: ascent/ascent-vault
+    hostname: vault
+    cap_add:
+      - IPC_LOCK
+    environment:
+      - VAULT_ADDR=http://vault:8200
+      - VAULT_DEV_ROOT_TOKEN_ID=vaultroot
+      - tls_disable=1
+      - GIT_ACCESS_TOKEN=$GIT_ACCESS_TOKEN
+    ports:
+      - "8200:8200"
+    command: server -dev
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:8200/v1/sys/health"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    networks:
+      - ascentnet
+    
 networks:
   ascentnet:
     driver: bridge
