@@ -56,10 +56,14 @@ spring:
 eureka:
   client:
     enabled: true
+    securePortEnabled: true
     serviceUrl:
-      defaultZone: http://${discovery.username:eureka}:${discovery.password:default}@${discovery.server.peer1.name:ascent-discovery}:${discovery.server.peer1.port:8761}/eureka/,http://${discovery.username:eureka}:${discovery.password:default}@${discovery.server.peer2.name:ascent-discovery-peer}:${discovery.server.peer2.port:8761}/eureka/
+      defaultZone: https://${discovery.username:eureka}:${discovery.password:default}@${discovery.server.peer1.name:ascent-discovery}:${discovery.server.peer1.port:8761}/eureka/,http://${discovery.username:eureka}:${discovery.password:default}@${discovery.server.peer2.name:ascent-discovery-peer}:${discovery.server.peer2.port:8761}/eureka/
     preferSameZoneEureka: true
   instance:
+    nonSecurePortEnabled: false
+    securePortEnabled: true
+    securePort: 8762
     hostname: "${INSTANCE_HOST_NAME:@project.artifactId@}"
     preferIpAddress: false
 ---
