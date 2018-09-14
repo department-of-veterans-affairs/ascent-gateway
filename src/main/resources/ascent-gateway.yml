@@ -98,8 +98,8 @@ spring.sleuth.rxjava.schedulers.ignoredthreads: HystixMetricPoller,^RxComputatio
 
 # Added for MultiPart File Uploads
 # Tomcat upload file configuration
-spring.http.multipart.max-file-size: 25MB # Max file size. Values can use the suffixed "MB" or "KB" to indicate a Megabyte or Kilobyte size.
-spring.http.multipart.max-request-size: 26MB # Max request size. Values can use the suffixed "MB" or "KB" to indicate a Megabyte or Kilobyte size.
+spring.http.multipart.max-file-size: 100MB # Max file size. Values can use the suffixed "MB" or "KB" to indicate a Megabyte or Kilobyte size.
+spring.http.multipart.max-request-size: 110MB # Max request size. Values can use the suffixed "MB" or "KB" to indicate a Megabyte or Kilobyte size.
 ---
 spring:
   profiles: default, local-int
