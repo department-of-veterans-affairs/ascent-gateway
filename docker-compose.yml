@@ -15,6 +15,7 @@ services:
       - ascentnet
   ascent-discovery:
     image: ascent/ascent-discovery
+    hostname: ascent-discovery
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-aws-ci}
       - 'VAULT_ADDR=${VAULT_ADDR}'
