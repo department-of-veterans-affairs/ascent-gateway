@@ -26,6 +26,7 @@ services:
       - 8761
   ascent-config:
     image: ascent/ascent-config
+    hostname: ascent-config
     ports:
       - 8760
     environment:
@@ -45,6 +46,7 @@ services:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-aws-ci}
       - 'VAULT_ADDR=${VAULT_ADDR}'
       - 'VAULT_TOKEN=${VAULT_TOKEN}'
+      - IGNORE_EXT_CERT=${IGNORE_EXT_CERT:-true}
     networks:
       - ascentnet
     depends_on:
