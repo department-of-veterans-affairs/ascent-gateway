@@ -14,8 +14,16 @@ microservicePipeline {
     vaultTokens = [
         "VAULT_TOKEN": "ascent-platform"
     ]
-    testEnvironment = ['docker-compose.yml']
+    testEnvironment = ['docker-compose.yml', 'docker-compose.override.yml']
     serviceToTest = 'ascent-gateway'
     deployWaitTime = 300
     testVaultTokenRole = "ascent-platform"
+    containerPort = 8762
+
+    /*********  Deployment Configuration ***********/
+    stackName = "gateway"
+    serviceName = "ascent-gateway"
+
+    //Default Deployment Configuration Values
+    //composeFiles = ["docker-compose.yml"]
 }

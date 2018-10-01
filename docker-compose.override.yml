@@ -4,17 +4,13 @@ services:
   ascent-gateway:
     build:
       context: .
-    environment:
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-docker-demo}
-      - VAULT_ADDR=http://vault:8200
-      - VAULT_TOKEN=vaultroot
+    #environment:
       # The following line sets up the ability to connect a remote debugger process to port 8000 of the application.
       # The application will not wait for the debugger to connect with this configuration. If you want the application to wait to
       # start until the debugger connects, change the "suspend=n" portion of the debug config to "suspend=y"
-      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
-    ports:
-      - 8762:8762
-      - 8000:8000
+      #- JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
+    #ports:
+    # - 8000:8000
     logging:
       driver: json-file
     depends_on:
@@ -23,55 +19,68 @@ services:
 
 ####### Platform Services ########
 
-  ascent-amqp:
-    image: ascent/rabbitmq
-    networks:
-    - ascentnet
-    environment:
-      - VAULT_ADDR=http://vault:8200
-      - VAULT_TOKEN=vaultroot
-    depends_on:
-      - vault
-      - consul
-
-  consul: 
-    image: consul:1.0.2
-    networks:
-      - ascentnet
-
   ascent-discovery:
     image: ascent/ascent-discovery
     hostname: ascent-discovery
-    ports:
-    - 8761:8761
     environment:
-    - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-docker-demo}
-    - VAULT_ADDR=http://vault:8200
-    - VAULT_TOKEN=vaultroot
-    - eureka.client.registerWithEureka=false
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-docker-demo}
+      - VAULT_ADDR=${VAULT_ADDR:-http://vault:8200}
+      - VAULT_TOKEN=${VAULT_TOKEN:-vaultroot}
+    networks:
+      - ascentnet
+    ports:
+      - 8761
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
     depends_on:
       - vault
-    networks:
-    - ascentnet
 
   ascent-config:
     image: ascent/ascent-config
-    ports:
-    - 8760:8760
     environment:
-    - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-docker-demo}
-    - VAULT_ADDR=http://vault:8200
-    - VAULT_TOKEN=vaultroot
-    - VAULT_HOST=vault
-    - VAULT_PORT=8200
-    - VAULT_SCHEME=http
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-docker-demo}
+      - VAULT_ADDR=${VAULT_SCHEME:-http}://${VAULT_HOST:-vault}:${VAULT_PORT:-8200}
+      - VAULT_TOKEN=${VAULT_TOKEN:-vaultroot}
+      - VAULT_HOST=${VAULT_HOST:-vault}
+      - VAULT_PORT=${VAULT_PORT:-8200}
+      - VAULT_SCHEME=${VAULT_SCHEME:-http}
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+    networks:
+      - ascentnet
+    ports:
+      - 8760
     depends_on:
       - ascent-discovery
       - vault
-      - ascent-amqp
+
+###### Message Queue ########
+
+  ascent-amqp:
+    image: ascent/rabbitmq
+    networks:
+      ascentnet:
+        aliases:
+          - rabbit
+    environment:
+    - VAULT_ADDR=${VAULT_ADDR:-http://vault:8200}
+    - VAULT_TOKEN=${VAULT_TOKEN:-vaultroot}
+    depends_on:
+      - vault
+    deploy:
+      placement:
+        constraints:
+        - node.role == worker
+
+  consul:
+    image: consul:1.0.2
     networks:
     - ascentnet
-
+  
 ###### Vault ##########
 
   vault:
@@ -84,17 +93,10 @@ services:
       - VAULT_DEV_ROOT_TOKEN_ID=vaultroot
       - tls_disable=1
       - GIT_ACCESS_TOKEN=$GIT_ACCESS_TOKEN
-    ports:
-      - "8200:8200"
     command: server -dev
-    healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:8200/v1/sys/health"]
-        interval: 30s
-        timeout: 10s
-        retries: 5
     networks:
       - ascentnet
     
 networks:
   ascentnet:
-    driver: bridge
+    driver: ${DRIVER_TYPE:-bridge}
