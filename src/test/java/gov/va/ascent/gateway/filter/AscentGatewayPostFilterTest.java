@@ -3,6 +3,7 @@ package gov.va.ascent.gateway.filter;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.POST_TYPE;
@@ -97,8 +98,8 @@ public class AscentGatewayPostFilterTest {
 
 		final List<LoggingEvent> loggingEvents = captorLoggingEvent.getAllValues();
 		// Check log level is correct
-		assertThat(loggingEvents.get(0).getLevel(), is(Level.INFO));
-		assertEquals("Completed Request {}", loggingEvents.get(0).getMessage());
+		assertThat(loggingEvents.get(0).getLevel().toString(), is(Level.INFO.name()));
+		assertTrue(loggingEvents.get(0).getMessage().startsWith("Completed Request "));
 		assertEquals(null, obj);
 	}
 
