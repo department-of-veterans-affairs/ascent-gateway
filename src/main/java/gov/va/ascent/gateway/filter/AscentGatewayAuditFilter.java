@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.Tracer;
@@ -19,17 +17,18 @@ import org.springframework.http.ResponseEntity;
 
 import com.netflix.zuul.context.RequestContext;
 
+import gov.va.ascent.framework.log.AscentLogger;
+import gov.va.ascent.framework.log.AscentLoggerFactory;
 
 public class AscentGatewayAuditFilter extends AscentGatewayAbstractFilter {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AscentGatewayAuditFilter.class);
+	private static final AscentLogger LOGGER = AscentLoggerFactory.getLogger(AscentGatewayAuditFilter.class);
 	private static final String SPAN_HTTP_REQUEST = "http.request";
 	private static final String SPAN_HTTP_RESPONSE = "http.response";
 
+	@Autowired
+	Tracer tracer;
 
-	@Autowired Tracer tracer;
-	
-	
 	@Override
 	public String filterType() {
 		return "post";
@@ -37,6 +36,7 @@ public class AscentGatewayAuditFilter extends AscentGatewayAbstractFilter {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.netflix.zuul.ZuulFilter#filterOrder()
 	 * Filter order is set to -1 so as to get the tag
 	 * data into next span
@@ -57,7 +57,7 @@ public class AscentGatewayAuditFilter extends AscentGatewayAbstractFilter {
 	}
 
 	private boolean supportsAuditType(final RequestContext context) {
-		return (!httpStatusSuccessful(context.getResponse()));
+		return !httpStatusSuccessful(context.getResponse());
 	}
 
 	@Override
@@ -71,14 +71,14 @@ public class AscentGatewayAuditFilter extends AscentGatewayAbstractFilter {
 		}
 
 		/**
-		 *  AUDIT THE REQUEST AND RESPONSE ADDED TO TRACER FOR SLEUTH (org.springframework.cloud.sleuth.Tracer)
-		 *  BELOW CONDITIONS WOULD TRIGGER ADDING AUDIT TAGS
-		 *  1) HTTP ERROR RESPONSE
+		 * AUDIT THE REQUEST AND RESPONSE ADDED TO TRACER FOR SLEUTH (org.springframework.cloud.sleuth.Tracer)
+		 * BELOW CONDITIONS WOULD TRIGGER ADDING AUDIT TAGS
+		 * 1) HTTP ERROR RESPONSE
 		 */
 		String responseMessage = "";
 		try {
-			InputStream is=request.getInputStream();
-			String content=IOUtils.toString(is, StandardCharsets.UTF_8.name());
+			InputStream is = request.getInputStream();
+			String content = IOUtils.toString(is, StandardCharsets.UTF_8.name());
 			if (StringUtils.isNotEmpty(content)) {
 				LOGGER.debug("Request content: {}", content);
 				this.tracer.addTag(SPAN_HTTP_REQUEST, content);
@@ -88,15 +88,14 @@ public class AscentGatewayAuditFilter extends AscentGatewayAbstractFilter {
 		}
 
 		InputStream inputStream = ctx.getResponseDataStream();
-		if (inputStream!=null) {
+		if (inputStream != null) {
 			try {
 				responseMessage = IOUtils.toString(inputStream, StandardCharsets.UTF_8.name());
 				ctx.setResponseBody(responseMessage);
 				LOGGER.debug("Response:: {}", responseMessage);
 			} catch (IOException e) {
 				LOGGER.warn("IOException Response InputStream:: {}", e);
-			}
-			finally {
+			} finally {
 				IOUtils.closeQuietly(inputStream);
 			}
 		}
@@ -118,7 +117,7 @@ public class AscentGatewayAuditFilter extends AscentGatewayAbstractFilter {
 
 		return null;
 	}
-	
+
 	private boolean httpStatusSuccessful(HttpServletResponse response) {
 		if (response.getStatus() == 0) {
 			return false;

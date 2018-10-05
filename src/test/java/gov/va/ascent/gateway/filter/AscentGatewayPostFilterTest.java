@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
@@ -27,11 +27,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.netflix.zuul.context.RequestContext;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.Appender;
+import gov.va.ascent.framework.log.AscentLogger;
+import gov.va.ascent.framework.log.AscentLoggerFactory;
 
 @RunWith(SpringRunner.class)
 public class AscentGatewayPostFilterTest {
@@ -60,9 +60,9 @@ public class AscentGatewayPostFilterTest {
 	// It's not quite necessary but it also shows you how it can be done
 	@Before
 	public void init() {
-		final Logger logger = (Logger) LoggerFactory.getLogger(AscentGatewayPostFilter.class);
+		final AscentLogger logger = AscentLoggerFactory.getLogger(AscentGatewayPostFilter.class);
 		logger.setLevel(Level.DEBUG);
-		logger.addAppender(mockAppender);
+		logger.getLoggerBoundImpl().addAppender(mockAppender);
 		this.properties = new ZuulProperties();
 		this.routeLocator = new DiscoveryClientRouteLocator("/", this.discovery,
 				this.properties);
@@ -104,7 +104,7 @@ public class AscentGatewayPostFilterTest {
 
 	@Test
 	public void testRunDebugOff() throws Exception {
-		final Logger logger = (Logger) LoggerFactory.getLogger(AscentGatewayPostFilter.class);
+		final AscentLogger logger = AscentLoggerFactory.getLogger(AscentGatewayPostFilter.class);
 		logger.setLevel(Level.ERROR);
 		final MockHttpServletResponse response = new MockHttpServletResponse();
 		response.setHeader("TestHeader", "TestHeader");

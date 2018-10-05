@@ -2,26 +2,26 @@ package gov.va.ascent.gateway.filter;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.sleuth.Tracer;
 
 import com.netflix.zuul.context.RequestContext;
 
+import gov.va.ascent.framework.log.AscentLogger;
+import gov.va.ascent.framework.log.AscentLoggerFactory;
 import gov.va.ascent.framework.util.SanitizationUtil;
 
 public class AscentGatewayPostFilter extends AscentGatewayAbstractFilter {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AscentGatewayPostFilter.class);
+	private static final AscentLogger LOGGER = AscentLoggerFactory.getLogger(AscentGatewayPostFilter.class);
 
 	@Autowired
 	Tracer tracer;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.netflix.zuul.IZuulFilter#run()
 	 */
 	@Override
@@ -43,7 +43,7 @@ public class AscentGatewayPostFilter extends AscentGatewayAbstractFilter {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.netflix.zuul.ZuulFilter#filterType()
 	 */
 	@Override
@@ -53,7 +53,7 @@ public class AscentGatewayPostFilter extends AscentGatewayAbstractFilter {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.netflix.zuul.ZuulFilter#filterOrder()
 	 */
 	@Override
@@ -63,7 +63,7 @@ public class AscentGatewayPostFilter extends AscentGatewayAbstractFilter {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.netflix.zuul.IZuulFilter#shouldFilter()
 	 */
 	@Override
