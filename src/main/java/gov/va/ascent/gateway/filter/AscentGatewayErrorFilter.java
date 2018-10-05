@@ -1,34 +1,34 @@
 package gov.va.ascent.gateway.filter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.netflix.zuul.context.RequestContext;
+
+import gov.va.ascent.framework.log.AscentLogger;
+import gov.va.ascent.framework.log.AscentLoggerFactory;
 
 public class AscentGatewayErrorFilter extends AscentGatewayAbstractFilter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AscentGatewayErrorFilter.class);
-    
-    @Override
-    public String filterType() {
-        return "error";
-    }
+	private static final AscentLogger LOGGER = AscentLoggerFactory.getLogger(AscentGatewayErrorFilter.class);
 
-    @Override
-    public int filterOrder() {
-        return 0; 
-    }
+	@Override
+	public String filterType() {
+		return "error";
+	}
 
-    @Override
-    public boolean shouldFilter() {
-        return true;
-    }
+	@Override
+	public int filterOrder() {
+		return 0;
+	}
 
-    @Override
-    public Object run() {
-    	Throwable throwable = RequestContext.getCurrentContext().getThrowable();
-    	LOGGER.error("Exception was thrown in filters: ", throwable);
+	@Override
+	public boolean shouldFilter() {
+		return true;
+	}
 
-        return null;
-    }
+	@Override
+	public Object run() {
+		Throwable throwable = RequestContext.getCurrentContext().getThrowable();
+		LOGGER.error("Exception was thrown in filters: ", throwable);
+
+		return null;
+	}
 }

@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +24,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.netflix.zuul.context.RequestContext;
 
+import gov.va.ascent.framework.log.AscentLogger;
+import gov.va.ascent.framework.log.AscentLoggerFactory;
 import gov.va.ascent.framework.util.SanitizationUtil;
 
 /**
@@ -36,7 +36,7 @@ import gov.va.ascent.framework.util.SanitizationUtil;
 @RestController
 public class AscentGatewayErrorController extends AbstractErrorController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AscentGatewayErrorController.class);
+	private static final AscentLogger LOGGER = AscentLoggerFactory.getLogger(AscentGatewayErrorController.class);
 
 	/** The request mapping */
 	@Value("${error.path:/error}")

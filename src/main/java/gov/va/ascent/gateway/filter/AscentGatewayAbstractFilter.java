@@ -6,17 +6,16 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 
+import gov.va.ascent.framework.log.AscentLogger;
+import gov.va.ascent.framework.log.AscentLoggerFactory;
 import gov.va.ascent.framework.util.SanitizationUtil;
 
 public abstract class AscentGatewayAbstractFilter extends ZuulFilter {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AscentGatewayAbstractFilter.class);
+	private static final AscentLogger LOGGER = AscentLoggerFactory.getLogger(AscentGatewayAbstractFilter.class);
 
 	void debugRequestResponse(final RequestContext ctx) {
 		final HttpServletRequest request = ctx.getRequest();

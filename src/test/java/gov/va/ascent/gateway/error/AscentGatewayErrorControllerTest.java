@@ -25,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,8 +38,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.netflix.zuul.context.RequestContext;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
+import gov.va.ascent.framework.log.AscentLogger;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -75,11 +75,11 @@ public class AscentGatewayErrorControllerTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		Logger logger = null;
+		AscentLogger logger = null;
 		try {
 			final Field loggerField = AscentGatewayErrorController.class.getDeclaredField("LOGGER");
 			loggerField.setAccessible(true);
-			logger = (Logger) loggerField.get(controller);
+			logger = (AscentLogger) loggerField.get(controller);
 			logger.setLevel(Level.DEBUG);
 		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			e.printStackTrace();
