@@ -77,7 +77,7 @@ public class AscentGatewayErrorController extends AbstractErrorController {
 	 * @return ResponseEntity&lt;Map&lt;String, Object&gt;&gt; the entity for the response
 	 */
 	@RequestMapping(value = "${error.path:/error}", produces = "application/json;charset=UTF-8")
-	// NOSONAR TODO: Need to review the method to figure out if this is better way to add span error tag and also the response
+	// NOSONAR TODO: can the error messages all be combined? Or at least a better way to add span error tags to them?
 	// status body message to be set using getErrorAttributes(request, true)
 	public ResponseEntity<Map<String, Object>> error(final HttpServletRequest request, final HttpServletResponse response) {
 		MDC.put("http.request", tracer.getCurrentSpan().getName());
