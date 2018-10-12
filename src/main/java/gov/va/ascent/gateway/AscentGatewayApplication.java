@@ -7,6 +7,7 @@ import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.cloud.sleuth.sampler.AlwaysSampler;
 import org.springframework.context.annotation.Bean;
+import org.springframework.metrics.export.prometheus.EnablePrometheusMetrics;
 
 import gov.va.ascent.framework.log.AscentLogger;
 import gov.va.ascent.framework.log.AscentLoggerFactory;
@@ -14,6 +15,7 @@ import gov.va.ascent.gateway.filter.AscentGatewayAuditFilter;
 import gov.va.ascent.gateway.filter.AscentGatewayErrorFilter;
 import gov.va.ascent.gateway.filter.AscentGatewayPostFilter;
 import gov.va.ascent.gateway.filter.AscentGatewayPreFilter;
+
 
 /**
  * An <tt>Ascent Gateway Server</tt> enabled for Spring Boot Application,
@@ -24,6 +26,7 @@ import gov.va.ascent.gateway.filter.AscentGatewayPreFilter;
 @EnableZuulProxy
 @EnableDiscoveryClient // enables spring-cloud-config client
 @EnableHystrix
+@EnablePrometheusMetrics
 public class AscentGatewayApplication {
 
 	private static final AscentLogger LOGGER = AscentLoggerFactory.getLogger(AscentGatewayApplication.class);

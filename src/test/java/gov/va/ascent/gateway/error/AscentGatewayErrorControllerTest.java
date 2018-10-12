@@ -39,10 +39,11 @@ import com.google.gson.JsonParser;
 import com.netflix.zuul.context.RequestContext;
 
 import gov.va.ascent.framework.log.AscentLogger;
+import gov.va.ascent.gateway.BaseTest;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AscentGatewayErrorControllerTest {
+public class AscentGatewayErrorControllerTest extends BaseTest {
 
 	private static final String ERROR_MSG = "This is a test error message";
 
