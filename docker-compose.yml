@@ -1,6 +1,6 @@
 version: '3.3'
 services:
-  
+
   ascent-gateway:
     image: ascent/ascent-gateway:${RELEASE_VERSION:-latest}
     environment:
@@ -24,6 +24,11 @@ services:
         - ascentnet
     ports:
         - "${PORT:-8762:8762}"
+    healthcheck:
+      test: ["CMD", "/healthcheck", "--url", "https://localhost:8762/actuator/health"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
 
 networks:
   ascentnet:
