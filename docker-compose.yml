@@ -20,6 +20,11 @@ services:
       placement:
         constraints:
           - node.role == worker
+      update_config:
+        parallelism: 1
+        delay: 60s
+        monitor: 60s
+        failure_action: pause
     networks:
         - ascentnet
     ports:
