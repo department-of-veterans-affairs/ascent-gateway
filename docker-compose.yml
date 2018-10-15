@@ -1,6 +1,6 @@
 version: '3.3'
 services:
-  
+
   ascent-gateway:
     image: ascent/ascent-gateway:${RELEASE_VERSION:-latest}
     environment:
@@ -20,10 +20,20 @@ services:
       placement:
         constraints:
           - node.role == worker
+      update_config:
+        parallelism: 1
+        delay: 60s
+        monitor: 60s
+        failure_action: pause
     networks:
         - ascentnet
     ports:
         - "${PORT:-8762:8762}"
+    healthcheck:
+      test: ["CMD", "/healthcheck", "--url", "https://localhost:8762/actuator/health"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
 
 networks:
   ascentnet:
