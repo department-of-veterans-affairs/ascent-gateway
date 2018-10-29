@@ -45,7 +45,7 @@ eureka:
   client:
     enabled: true
     serviceUrl:
-      defaultZone: http://${discovery.username:eureka}:${discovery.password:default}@localhost:${discovery.server.port:8761}/eureka/
+      defaultZone: http://${ascent.discovery.username:eureka}:${ascent.discovery.password:default}@localhost:${discovery.server.port:8761}/eureka/
   instance:
     hostname: "${INSTANCE_HOST_NAME:localhost}"
 
@@ -58,7 +58,7 @@ eureka:
     enabled: true
     securePortEnabled: true
     serviceUrl:
-      defaultZone: https://${discovery.username:eureka}:${discovery.password:default}@${discovery.server.peer1.name:ascent-discovery}:${discovery.server.peer1.port:8761}/eureka/,http://${discovery.username:eureka}:${discovery.password:default}@${discovery.server.peer2.name:ascent-discovery-peer}:${discovery.server.peer2.port:8761}/eureka/
+      defaultZone: https://${ascent.discovery.username:eureka}:${ascent.discovery.password:default}@${discovery.server.peer1.name:ascent-discovery}:${discovery.server.peer1.port:8761}/eureka/,http://${ascent.discovery.username:eureka}:${ascent.discovery.password:default}@${discovery.server.peer2.name:ascent-discovery-peer}:${discovery.server.peer2.port:8761}/eureka/
     preferSameZoneEureka: true
   instance:
     nonSecurePortEnabled: false
