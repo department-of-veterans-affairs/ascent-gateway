@@ -1,11 +1,11 @@
 server:
   port: ${gateway.server.port:8762}
-info:  
+info:
   build:
     version:  "@project.version@"
     artifact: "@project.artifactId@"
     name: "@project.name@"
-    description: "@project.description@"  
+    description: "@project.description@"
 ######################
 ### ZUUL PROPERTIES ##
 ######################
@@ -13,29 +13,29 @@ zuul:
   prefix: /api
   retryable: true
   semaphore:
-    # com.netflix.hystrix.exception.HystrixRuntimeException: "microservice" could not acquire a semaphore for execution and no fallback available. 
+    # com.netflix.hystrix.exception.HystrixRuntimeException: "microservice" could not acquire a semaphore for execution and no fallback available.
     # Default Value = 100
     max-semaphores: 5000
   sensitiveHeaders: Cookie, Set-Cookie
 #  Uncomment to disable services automatically registering in Zuul
-#  ignoredServices: '*'     
+#  ignoredServices: '*'
 endpoints:
   health:
     sensitive: false
 security:
   user:
-    name: ${ascent.security.username:admin}
-    password: ${ascent.security.password:default}
+    name: ${ascent.gateway.username:admin}
+    password: ${ascent.gateway.password:default}
 #  logging level enabling for debug, info, trace, error
-logging: 
+logging:
   level:
     gov:
       va:
         ascent.gateway: INFO
     org:
-      springframework: 
+      springframework:
         cloud:
-          sleuth: 
+          sleuth:
             log: INFO
             trace: INFO
 #  hystrix command overrides
@@ -44,17 +44,17 @@ hystrix:
     default:
       metrics:
         rollingStats:
-          # This property sets the duration of the statistical rolling window, in milliseconds. 
-          # This is how long Hystrix keeps metrics for the circuit breaker to use and for publishing 
+          # This property sets the duration of the statistical rolling window, in milliseconds.
+          # This is how long Hystrix keeps metrics for the circuit breaker to use and for publishing
           # Default Value: 10000
           timeInMilliseconds: 20000
-        # This property sets the time to wait, in milliseconds, between allowing health snapshots to be taken that calculate 
-        # success and error percentages and affect circuit breaker status. 
+        # This property sets the time to wait, in milliseconds, between allowing health snapshots to be taken that calculate
+        # success and error percentages and affect circuit breaker status.
         # Default Value: 500
-        healthSnapshot: 
+        healthSnapshot:
           intervalInMilliseconds: 1000
       circuitBreaker:
-        # This property sets the amount of time, after tripping the circuit, to reject requests 
+        # This property sets the amount of time, after tripping the circuit, to reject requests
         # before allowing attempts again to determine if the circuit should again be closed.
         # Default Value: 5000
         sleepWindowInMilliseconds: 10000
@@ -87,7 +87,7 @@ ascent:
       enabled: false
       # any urls to be excluded by the filter
       excludeUrls: "/api/**/v2/api-docs, /api/**/configuration/ui, /api/**/swagger-resources, /api/**/configuration/security, /api/**/swagger-ui.html, /api/**/webjars/**, /**/token, /api/**/beans, /api/**/beans, /api/**/autoconfig, /api/**/configprops, /api/**/dump, /api/**/env, /api/**/health, /api/**/info, /api/**/metrics, /api/**/mappings, /api/**/trace, /api/**/loggers, /**/swagger/error-keys.html"
-# Sleuth configuration     
+# Sleuth configuration
 # To skip specific patterns being exported, added few more customs on top of default skip pattern
 # see org.springframework.cloud.sleuth.instrument.web.TraceFilter.DEFAULT_SKIP_PATTERN
 spring.sleuth.web.skipPattern: (/api/.*/webjars.*|/api/.*/v2/api-docs.*|/api/.*/swagger-resources.*|/api/.*/swagger-ui.*|/api-docs.*|/manage.*|/mappings|/trace|/swagger.*|.*\\.png|.*\\.css|.*\\.js|.*\\.html|/favicon.ico|/hystrix.stream)
@@ -120,7 +120,7 @@ server:
     ######### These properties are set by the run-wrapper.sh script in the ascent-base container #########
     # key-alias: @project.name@
     # key-store: /app/certs/server.jks
-    # key-store-password: 
+    # key-store-password:
     # trust-store: /app/certs/server-truststore.jks
     # trust-store-password:
     ######################################################################################################
