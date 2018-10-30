@@ -9,7 +9,7 @@ public class GatewayAppUtil {
 	}
 	
 	public static String getBaseURL() {
-		return RESTConfigService.getBaseURL("data.'ascent.security.username'", "data.'ascent.security.password'");
+		return RESTConfigService.getBaseURL("data.'username'", "data.'password'");
 	}
 }
 
