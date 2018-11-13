@@ -18,13 +18,21 @@ spring:
         multiplier: 1.2
         maxAttempts: 10
       token: ${VAULT_TOKEN:vaultroot}
+management:
+  context-path: /actuator
+
 eureka:
   client:
     enabled: false
   instance:
     leaseRenewalIntervalInSeconds: 10
     leaseExpirationDurationInSeconds: 30
+    statusPageUrlPath: ${management.context-path}${endpoints.info.path:/info}
+    healthCheckUrlPath: ${management.context-path}${endpoints.health.path:/health}
     metadata-map:
+      management.context-path: /actuator
+      user.name: ${ascent.gateway.username:admin}
+      user.password: ${ascent.gateway.password:default}
       version:  "@project.version@"
       artifact: "@project.artifactId@"
       name: "@project.name@"
