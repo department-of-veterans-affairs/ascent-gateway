@@ -3,8 +3,6 @@ package gov.va.ascent.gateway.filter;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.sleuth.Tracer;
 
 import com.netflix.zuul.context.RequestContext;
 
@@ -15,9 +13,6 @@ import gov.va.ascent.framework.util.SanitizationUtil;
 public class AscentGatewayPostFilter extends AscentGatewayAbstractFilter {
 
 	private static final AscentLogger LOGGER = AscentLoggerFactory.getLogger(AscentGatewayPostFilter.class);
-
-	@Autowired
-	Tracer tracer;
 
 	/*
 	 * (non-Javadoc)
