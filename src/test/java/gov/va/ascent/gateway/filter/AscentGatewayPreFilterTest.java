@@ -51,9 +51,10 @@ public class AscentGatewayPreFilterTest {
 
 	@Before
 	public void init() {
-		PersonTraits personTraits = new PersonTraits("user", "password", AuthorityUtils.createAuthorityList("ROLE_TEST"));
-		Authentication auth =
-				new UsernamePasswordAuthenticationToken(personTraits, personTraits.getPassword(), personTraits.getAuthorities());
+		PersonTraits personTraits = new PersonTraits("user", "password",
+				AuthorityUtils.createAuthorityList("ROLE_TEST"));
+		Authentication auth = new UsernamePasswordAuthenticationToken(personTraits,
+				personTraits.getPassword(), personTraits.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(auth);
 		final AscentLogger logger = AscentLoggerFactory.getLogger(AscentGatewayPreFilter.class);
 		logger.setLevel(Level.DEBUG);
@@ -81,7 +82,7 @@ public class AscentGatewayPreFilterTest {
 	public void runTestNoPersonTraits() throws Exception {
 
 		AscentLogger root = AscentLoggerFactory.getLogger(this.getClass());
-		root.getLevel();
+		Level originalLevel = root.getLevel();
 		root.setLevel(Level.DEBUG);
 
 		Object obj = this.filter.run();
@@ -108,7 +109,8 @@ public class AscentGatewayPreFilterTest {
 	public void runTestPersonTraitsNullDebuggerOff() throws Exception {
 		final AscentLogger logger = AscentLoggerFactory.getLogger(AscentGatewayPreFilter.class);
 		logger.setLevel(Level.ERROR);
-		Authentication auth = new UsernamePasswordAuthenticationToken(null, null, null);
+		Authentication auth = new UsernamePasswordAuthenticationToken(null,
+				null, null);
 		SecurityContextHolder.getContext().setAuthentication(auth);
 		Object obj = this.filter.run();
 		verify(mockAppender, times(0)).doAppend(captorLoggingEvent.capture());
