@@ -68,6 +68,7 @@ public class AscentGatewayPreFilterTest {
 	@After
 	public void clear() {
 		RequestContext.getCurrentContext().clear();
+		SecurityContextHolder.clearContext();
 	}
 
 	@Test
